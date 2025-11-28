@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="index.xsl"?>
+
+<index>
+
+    <header>
+        <logo>../img/logo.png</logo>
+        <menu>
+            <item link="#hero">Inicio</item>
+            <item link="#servicios">Servicios</item>
+            <item link="#quienes">Quiénes Somos</item>
+            <item link="#equipo">Equipo</item>
+            <item link="../tienda/productos.xml">Tienda</item>
+            <item link="../marketplace/marketplace.xml">Marketplace</item>
+            <item link="../contacto/contacto.xml">Contacto</item>
+            <item link="../chatbot/chatbot.xml">Asistente IA</item>
+            <item link="../usuarios/login.xml">Iniciar Sesión</item>
+            <item link="../usuarios/registro.xml">Crear Cuenta</item>
+            <item link="../perfil/perfil_usuario.xml">Perfil</item>
+        </menu>
+    </header>
+
+    <hero id="hero">
+        <titulo>CITECH • Tecnología que Eleva tu Potencial</titulo>
+        <subtitulo>
+            Hardware de alto rendimiento, IA integrada y soluciones profesionales
+            para gamers, creadores y empresas.
+        </subtitulo>
+
+        <botones>
+            <boton tipo="primario" link="../tienda/productos.xml">Explorar Tienda</boton>
+            <boton tipo="secundario" link="#servicios">Servicios</boton>
+        </botones>
+
+        <stats>
+            <stat>
+                <numero>+500</numero>
+                <texto>Clientes satisfechos</texto>
+            </stat>
+            <stat>
+                <numero>24/7</numero>
+                <texto>Soporte dedicado</texto>
+            </stat>
+            <stat>
+                <numero>+120</numero>
+                <texto>Equipos premium montados</texto>
+            </stat>
+        </stats>
+    </hero>
+
+    <servicios id="servicios">
+        <titulo>Nuestros Servicios</titulo>
+        <tarjetas>
+
+            <servicio>
+                <icono>🖥️</icono>
+                <titulo>Montaje Premium</titulo>
+                <descripcion>
+                    Ensamblaje profesional con optimización térmica y rendimiento extremo.
+                </descripcion>
+            </servicio>
+
+            <servicio>
+                <icono>⚡</icono>
+                <titulo>Optimización Avanzada</titulo>
+                <descripcion>
+                    Aumentamos FPS, estabilidad y eficiencia energética de tu setup.
+                </descripcion>
+            </servicio>
+
+            <servicio>
+                <icono>🔧</icono>
+                <titulo>Soporte Técnico</titulo>
+                <descripcion>
+                    Diagnóstico experto, mantenimiento, upgrades y reparación.
+                </descripcion>
+            </servicio>
+
+        </tarjetas>
+    </servicios>
+
+    <quienes_somos id="quienes">
+        <titulo>¿Quiénes Somos?</titulo>
+        <descripcion>
+            CITECH nace para combinar tecnología, innovación y rendimiento real.
+            Ofrecemos calidad, transparencia y soporte profesional para que cada usuario
+            obtenga la mejor experiencia tecnológica posible.
+        </descripcion>
+
+        <valores>
+            <valor>
+                <nombre>✔ Excelencia</nombre>
+                <descripcion>Componentes probados y configuraciones estables.</descripcion>
+            </valor>
+            <valor>
+                <nombre>✔ Confianza</nombre>
+                <descripcion>Atención personalizada y soporte de expertos.</descripcion>
+            </valor>
+            <valor>
+                <nombre>✔ Innovación</nombre>
+                <descripcion>
+                    Integración de IA, sistemas personalizados y hardware de última generación.
+                </descripcion>
+            </valor>
+        </valores>
+    </quienes_somos>
+
+    <equipo id="equipo">
+        <titulo>Nuestro Equipo</titulo>
+        <miembros>
+
+            <miembro>
+                <nombre>Luis Miguel Pablos</nombre>
+                <rol>Fundador / Desarrollador</rol>
+                <foto>../img/luis.png</foto>
+            </miembro>
+
+            <miembro>
+                <nombre>Mario Rodríguez</nombre>
+                <rol>Soporte Técnico</rol>
+                <foto>../img/mario.png</foto>
+            </miembro>
+
+        </miembros>
+    </equipo>
+
+</index>

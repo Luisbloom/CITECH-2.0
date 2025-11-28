@@ -1,0 +1,94 @@
+/* tienda/tienda.css - estilo profesional para la tienda CITECH */
+:root{
+  --bg:#0b1124; --panel:#0f1b3a; --card: rgba(255,255,255,0.03);
+  --accent:#00eaff; --soft:#bfcff0; --radius:12px;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background:var(--bg);
+  color:#eaf4ff;
+}
+
+/* HEADER */
+.site-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 28px;background:rgba(10,18,40,0.9);position:sticky;top:0;z-index:50;
+  border-bottom:1px solid rgba(255,255,255,0.03);
+}
+.site-header .logo{width:110px}
+.main-nav a{color:#b9cff6;text-decoration:none;margin:0 12px;font-weight:600}
+.main-nav a.active{color:var(--accent);text-shadow:0 0 8px rgba(0,234,255,0.08)}
+.header-actions button{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--soft);padding:8px 12px;border-radius:8px;cursor:pointer;margin-left:8px}
+
+/* HERO */
+.hero-shop{display:flex;gap:24px;padding:40px 28px;background:linear-gradient(135deg,#07102a,#0b1736)}
+.hero-left{flex:1}
+.hero-left h1{font-size:2.6rem;margin-bottom:8px}
+.hero-left p{color:#cbdcf6;margin-bottom:18px;max-width:760px}
+.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.controls input[type=search]{padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:#081028;color:var(--soft);min-width:260px}
+.controls select{padding:10px;border-radius:10px;background:#081028;color:var(--soft);border:1px solid rgba(255,255,255,0.04)}
+.price-range{display:flex;align-items:center;gap:12px;color:var(--soft)}
+.price-range input[type=range]{width:180px}
+
+/* hero-right */
+.summary-card{background:var(--card);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.05);width:240px}
+.summary-card h3{margin-bottom:8px;color:var(--soft)}
+#user-balance{font-size:1.4rem;color:var(--accent);margin-bottom:10px}
+.balance-actions button{display:block;width:100%;margin-top:8px;padding:10px;border-radius:8px;border:none;cursor:pointer}
+.balance-actions #btn-recharge{background:linear-gradient(90deg,var(--accent),#7b00ff);color:#000;font-weight:700}
+.balance-actions #btn-profile{background:transparent;color:var(--soft);border:1px solid rgba(255,255,255,0.04)}
+
+/* CATALOG */
+.catalog{padding:28px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+
+/* PRODUCT CARD */
+.card{background:var(--card);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);transition:transform .18s,box-shadow .18s}
+.card:hover{transform:translateY(-8px);box-shadow:0 12px 30px rgba(0,0,0,0.6);border-color:var(--accent)}
+.card img{width:100%;height:160px;object-fit:cover;border-radius:8px;margin-bottom:12px}
+.card h4{margin:6px 0;font-size:1.05rem}
+.card p.desc{color:#bfcff0;font-size:.95rem;height:44px;overflow:hidden}
+.card .meta{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.price{color:var(--accent);font-weight:800}
+.card button{padding:10px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+.card button.add{background:var(--accent);color:#000}
+.card button.view{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--soft)}
+
+/* CART DRAWER */
+.cart-drawer{position:fixed;right:-420px;top:0;height:100vh;width:420px;background:#07102a;padding:16px;border-left:1px solid rgba(255,255,255,0.03);transition:right .25s;z-index:120}
+.cart-drawer.open{right:0}
+.cart-header{display:flex;justify-content:space-between;align-items:center}
+.cart-items{margin-top:16px;max-height:60vh;overflow:auto;padding-right:8px}
+.cart-item{display:flex;gap:12px;padding:10px;border-bottom:1px solid rgba(255,255,255,0.03)}
+.cart-item img{width:70px;height:50px;object-fit:cover;border-radius:8px}
+.qty{display:flex;align-items:center;gap:6px}
+.qty button{padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--soft)}
+
+/* CART FOOTER */
+.cart-footer{position:absolute;bottom:22px;left:16px;right:16px}
+.cart-actions{display:flex;gap:10px}
+.primary{background:linear-gradient(90deg,var(--accent),#7b00ff);border:none;color:#000;padding:10px;border-radius:10px;font-weight:800;width:50%;cursor:pointer}
+.secondary{background:transparent;color:var(--soft);border:1px solid rgba(255,255,255,0.04);padding:10px;border-radius:10px;width:45%}
+
+/* MODAL */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;z-index:200}
+.modal .modal-content{background:#07102a;padding:18px;border-radius:12px;max-width:720px;width:92%;border:1px solid rgba(255,255,255,0.04)}
+.modal .modal-content.small{max-width:420px}
+.modal.open{display:flex}
+.modal .modal-close{float:right;background:transparent;border:none;color:var(--soft);font-size:1.1rem;cursor:pointer}
+
+/* RESPONSIVE */
+@media (max-width:980px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .hero-shop{flex-direction:column}
+  .hero-right{margin-top:18px}
+}
+@media (max-width:600px){
+  .grid{grid-template-columns:1fr}
+  .site-header{padding:10px}
+  .hero-left h1{font-size:1.8rem}
+}

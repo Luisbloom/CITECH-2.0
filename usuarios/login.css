@@ -1,0 +1,103 @@
+/* GENERAL */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg, #0a1025, #0f1a3d);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* CONTENEDOR PRINCIPAL */
+.login-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 20px;
+}
+
+/* TARJETA DE LOGIN */
+.login-card {
+    background: rgba(18, 28, 60, 0.92);
+    border-radius: 12px;
+    padding: 30px 35px;
+    box-shadow: 0 0 25px rgba(0, 210, 255, 0.15);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(0, 255, 255, 0.12);
+}
+
+/* TÍTULO */
+.login-card h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 28px;
+    color: cyan;
+    letter-spacing: 1px;
+}
+
+/* LABEL */
+.login-card label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: #b9c9ff;
+}
+
+/* INPUT */
+.login-card input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 18px;
+    border-radius: 8px;
+    border: none;
+    background: #101933;
+    color: white;
+    font-size: 15px;
+    outline: none;
+    border: 1px solid transparent;
+    transition: 0.3s;
+}
+
+.login-card input:focus {
+    border-color: cyan;
+    box-shadow: 0 0 6px rgba(0, 255, 255, 0.4);
+}
+
+/* BOTÓN */
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    background: cyan;
+    color: #01121c;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.25s;
+}
+
+.btn-primary:hover {
+    background: #00eaff;
+    box-shadow: 0 0 12px rgba(0, 255, 255, 0.6);
+}
+
+/* TEXTO SECUNDARIO */
+.alt {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px;
+    color: #9eb4ff;
+}
+
+.alt a {
+    color: cyan;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.alt a:hover {
+    text-decoration: underline;
+}

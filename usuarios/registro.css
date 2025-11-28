@@ -1,0 +1,124 @@
+/* GENERAL */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg, #0a1025, #0f1a3d);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* CONTENEDOR PRINCIPAL */
+.reg-container {
+    width: 100%;
+    max-width: 520px;
+    padding: 20px;
+}
+
+/* TARJETA FORMULARIO */
+.reg-card {
+    background: rgba(18, 28, 60, 0.92);
+    padding: 35px 40px;
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgba(0, 210, 255, 0.15);
+    border: 1px solid rgba(0, 255, 255, 0.12);
+    backdrop-filter: blur(6px);
+}
+
+/* TÍTULO */
+.reg-card h1 {
+    text-align: center;
+    font-size: 28px;
+    color: cyan;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+}
+
+/* ETIQUETAS */
+.reg-card label {
+    display: block;
+    margin-bottom: 6px;
+    margin-top: 10px;
+    color: #c0d2ff;
+    font-size: 14px;
+}
+
+/* INPUTS */
+.reg-card input[type="text"],
+.reg-card input[type="email"],
+.reg-card input[type="password"],
+.reg-card input[type="date"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: none;
+    background: #101933;
+    color: white;
+    font-size: 15px;
+    outline: none;
+    border: 1px solid transparent;
+    transition: 0.3s;
+}
+
+.reg-card input:focus {
+    border-color: cyan;
+    box-shadow: 0 0 6px rgba(0, 255, 255, 0.5);
+}
+
+/* GRUPO CHECKBOX */
+.check-group {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.check-group input[type="checkbox"] {
+    margin-right: 8px;
+    transform: scale(1.25);
+}
+
+.check-group label {
+    margin-top: 0;
+    font-size: 14px;
+}
+
+/* BOTÓN */
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    background: cyan;
+    color: #07131c;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-top: 15px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.25s;
+}
+
+.btn-primary:hover {
+    background: #00eaff;
+    box-shadow: 0 0 12px rgba(0, 255, 255, 0.6);
+}
+
+/* TEXTO SECUNDARIO */
+.alt {
+    text-align: center;
+    margin-top: 18px;
+    color: #96aaff;
+}
+
+.alt a {
+    color: cyan;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.alt a:hover {
+    text-decoration: underline;
+}

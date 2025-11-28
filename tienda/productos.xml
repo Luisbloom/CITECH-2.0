@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="tienda.xsl"?>
+
+<tienda>
+
+    <!-- ================== TARJETAS GRÁFICAS ================== -->
+
+    <producto>
+        <id>1</id>
+        <nombre>NVIDIA GeForce RTX 4090 24GB GDDR6X</nombre>
+        <descripcion>
+            La GPU más potente del mercado. Perfecta para gaming extremo, IA y creación de contenido profesional.
+        </descripcion>
+        <precio>1999.99</precio>
+        <imagen>rtx4090.webp</imagen>
+        <categoria>Tarjetas Gráficas</categoria>
+    </producto>
+
+    <producto>
+        <id>2</id>
+        <nombre>NVIDIA GeForce RTX 4070 Ti SUPER 16GB</nombre>
+        <descripcion>
+            Excelente rendimiento en 1440p/4K con eficiencia energética mejorada y DLSS 3.5.
+        </descripcion>
+        <precio>899.99</precio>
+        <imagen>rtx4070ti.webp</imagen>
+        <categoria>Tarjetas Gráficas</categoria>
+    </producto>
+
+    <!-- ================== PROCESADORES ================== -->
+
+    <producto>
+        <id>3</id>
+        <nombre>Intel Core i9-14900K</nombre>
+        <descripcion>
+            Procesador tope de gama con 24 núcleos y máximo rendimiento para gaming y productividad.
+        </descripcion>
+        <precio>579.00</precio>
+        <imagen>i9_14900k.webp</imagen>
+        <categoria>Procesadores</categoria>
+    </producto>
+
+    <producto>
+        <id>4</id>
+        <nombre>AMD Ryzen 9 7950X3D</nombre>
+        <descripcion>
+            El mejor procesador AMD para gaming gracias a su tecnología 3D V-Cache.
+        </descripcion>
+        <precio>649.99</precio>
+        <imagen>ryzen7950x3d.webp</imagen>
+        <categoria>Procesadores</categoria>
+    </producto>
+
+    <!-- ================== PLACAS BASE ================== -->
+
+    <producto>
+        <id>5</id>
+        <nombre>ASUS ROG Strix Z790-F Gaming WiFi</nombre>
+        <descripcion>
+            Placa base Z790 de alto rendimiento con WiFi 6E, robustas fases de alimentación y diseño gaming premium.
+        </descripcion>
+        <precio>389.99</precio>
+        <imagen>z790f.webp</imagen>
+        <categoria>Placas Base</categoria>
+    </producto>
+
+    <producto>
+        <id>6</id>
+        <nombre>MSI MAG B650 Tomahawk WiFi</nombre>
+        <descripcion>
+            La mejor relación calidad/precio para plataformas Ryzen AM5 con soporte PCIe 5.0.
+        </descripcion>
+        <precio>239.99</precio>
+        <imagen>b650_tomahawk.webp</imagen>
+        <categoria>Placas Base</categoria>
+    </producto>
+
+    <!-- ================== ALMACENAMIENTO ================== -->
+
+    <producto>
+        <id>7</id>
+        <nombre>Samsung 990 PRO 2TB NVMe PCIe 4.0</nombre>
+        <descripcion>
+            Una de las unidades más rápidas del mercado con velocidades de lectura de hasta 7.450 MB/s.
+        </descripcion>
+        <precio>179.99</precio>
+        <imagen>990pro.webp</imagen>
+        <categoria>Almacenamiento</categoria>
+    </producto>
+
+    <producto>
+        <id>8</id>
+        <nombre>Kingston NV2 1TB NVMe</nombre>
+        <descripcion>
+            SSD económico y fiable, ideal para ampliar almacenamiento en cualquier equipo.
+        </descripcion>
+        <precio>54.99</precio>
+        <imagen>kingston_nv2.webp</imagen>
+        <categoria>Almacenamiento</categoria>
+    </producto>
+
+    <!-- ================== RAM ================== -->
+
+    <producto>
+        <id>9</id>
+        <nombre>Corsair Vengeance RGB DDR5 32GB 6000MHz</nombre>
+        <descripcion>
+            Memoria DDR5 de alto rendimiento con iluminación RGB direccionable.
+        </descripcion>
+        <precio>159.99</precio>
+        <imagen>ddr5_corsair.webp</imagen>
+        <categoria>Memoria RAM</categoria>
+    </producto>
+
+    <producto>
+        <id>10</id>
+        <nombre>G.Skill Trident Z5 Neo 32GB 6000MHz</nombre>
+        <descripcion>
+            Memoria optimizada para AMD AM5 con disipadores de aluminio premium.
+        </descripcion>
+        <precio>169.99</precio>
+        <imagen>tridentz5.webp</imagen>
+        <categoria>Memoria RAM</categoria>
+    </producto>
+
+</tienda>

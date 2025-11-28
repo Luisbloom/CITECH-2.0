@@ -1,0 +1,236 @@
+/* ======================== */
+/* ESTILO GENERAL */
+/* ======================== */
+
+body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #0a1025, #0f1a3d);
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+/* ======================== */
+/* HEADER */
+/* ======================== */
+
+.perfil-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #0c1633;
+    padding: 15px 25px;
+    border-bottom: 2px solid rgba(0, 255, 255, 0.2);
+}
+
+.logo {
+    height: 50px;
+}
+
+.perfil-header nav a {
+    margin: 0 15px;
+    color: #a8c7ff;
+    text-decoration: none;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+.perfil-header nav a:hover {
+    color: cyan;
+}
+
+.perfil-header nav .active {
+    color: cyan;
+    font-weight: bold;
+}
+
+/* ======================== */
+/* CONTENENEDOR PRINCIPAL */
+/* ======================== */
+
+.perfil-container {
+    display: flex;
+    padding: 30px;
+    gap: 20px;
+}
+
+/* ======================== */
+/* SIDEBAR */
+/* ======================== */
+
+.perfil-sidebar {
+    width: 230px;
+    background: rgba(10, 15, 35, 0.75);
+    border: 1px solid rgba(0, 255, 255, 0.15);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.perfil-sidebar h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: cyan;
+    text-align: center;
+}
+
+.perfil-sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.perfil-sidebar li {
+    padding: 12px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: 0.25s;
+    color: #d0dcff;
+}
+
+.perfil-sidebar li:hover {
+    background: rgba(0, 255, 255, 0.15);
+}
+
+.perfil-sidebar li.selected {
+    background: rgba(0, 255, 255, 0.35);
+    color: #041421;
+    font-weight: bold;
+}
+
+/* ======================== */
+/* PANEL PRINCIPAL */
+/* ======================== */
+
+.perfil-main {
+    flex: 1;
+    background: rgba(10, 15, 35, 0.65);
+    border: 1px solid rgba(0, 255, 255, 0.15);
+    border-radius: 10px;
+    padding: 25px;
+}
+
+/* Ocultar paneles */
+.panel {
+    display: none;
+}
+
+.panel.active {
+    display: block;
+}
+
+/* ======================== */
+/* FORMULARIOS */
+/* ======================== */
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.formulario label {
+    color: cyan;
+}
+
+.formulario input {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: #101933;
+    color: white;
+}
+
+.formulario input:focus {
+    border-color: cyan;
+}
+
+.btn-primary {
+    background: cyan;
+    color: #07131c;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.25s;
+}
+
+.btn-primary:hover {
+    background: #00eaff;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+}
+
+.btn-danger {
+    background: #ff3b3b;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* ======================== */
+/* FOTO DE PERFIL */
+/* ======================== */
+
+.foto-preview {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.foto-preview img {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid cyan;
+}
+
+/* ======================== */
+/* CARRITO */
+/* ======================== */
+
+.carrito-item {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 40, 60, 0.3);
+    border: 1px solid rgba(0, 255, 255, 0.15);
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.carrito-item img {
+    width: 70px;
+    border-radius: 6px;
+}
+
+.carrito-item .acciones button {
+    padding: 8px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    background: cyan;
+    color: black;
+    margin-left: 5px;
+}
+
+/* ======================== */
+/* TABLA MOVIMIENTOS */
+/* ======================== */
+
+.tabla-mov {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabla-mov th {
+    background: rgba(0, 255, 255, 0.15);
+    padding: 10px;
+    color: cyan;
+}
+
+.tabla-mov td {
+    padding: 10px;
+    border-bottom: 1px solid rgba(0, 255, 255, 0.15);
+}
