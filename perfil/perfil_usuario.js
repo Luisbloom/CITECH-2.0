@@ -1,6 +1,6 @@
 /* ===============================
    CONSTANTES LOCALSTORAGE
-   =============================== */
+=============================== */
 
 const LS_USERS = "CITECH_users_v1";
 const LS_CURRENT = "CITECH_currentUser_v1";
@@ -9,7 +9,7 @@ const LS_MOV = "CITECH_movements_v1";
 
 /* ===============================
    CARGA DE DATOS
-   =============================== */
+=============================== */
 
 let users = JSON.parse(localStorage.getItem(LS_USERS) || "[]");
 let currentUser = JSON.parse(localStorage.getItem(LS_CURRENT) || "null");
@@ -23,7 +23,7 @@ if (!currentUser) {
 
 /* ===============================
    DOM ELEMENTOS
-   =============================== */
+=============================== */
 
 const paneles = document.querySelectorAll(".panel");
 const sidebarItems = document.querySelectorAll(".perfil-sidebar li");
@@ -87,7 +87,7 @@ const btnLogout = document.querySelector("#btn-logout");
 
 /* ===============================
    PANEL SELECCIONADO
-   =============================== */
+=============================== */
 
 sidebarItems.forEach(item => {
   item.addEventListener("click", () => {
@@ -103,7 +103,7 @@ sidebarItems.forEach(item => {
 
 /* ===============================
    MOSTRAR LINK ADMIN
-   =============================== */
+=============================== */
 
 if (currentUser.rol === "admin") {
     adminLink.style.display = "inline-block";
@@ -112,7 +112,7 @@ if (currentUser.rol === "admin") {
 
 /* ===============================
    CARGAR INFORMACIÓN
-   =============================== */
+=============================== */
 
 function cargarInfo() {
   fotoPerfilPreview.src = currentUser.foto || "../img/default_user.png";
@@ -130,7 +130,7 @@ function cargarInfo() {
 
 /* ===============================
    EDITAR PERFIL
-   =============================== */
+=============================== */
 
 function cargarEditar() {
   editNombre.value = currentUser.nombre;
@@ -162,7 +162,7 @@ btnGuardarEditar.onclick = () => {
 
 /* ===============================
    CAMBIAR CONTRASEÑA
-   =============================== */
+=============================== */
 
 btnCambiarPass.onclick = () => {
   if (passActual.value !== currentUser.password)
@@ -184,7 +184,7 @@ btnCambiarPass.onclick = () => {
 
 /* ===============================
    FOTO DE PERFIL
-   =============================== */
+=============================== */
 
 fotoInput.onchange = e => {
   const file = e.target.files[0];
@@ -207,7 +207,7 @@ btnGuardarFoto.onclick = () => {
 
 /* ===============================
    SALDO
-   =============================== */
+=============================== */
 
 function cargarSaldo() {
   saldoEl.textContent = currentUser.saldo.toFixed(2) + "€";
@@ -229,7 +229,7 @@ btnRecargar.onclick = () => {
 
 /* ===============================
    CARRITO
-   =============================== */
+=============================== */
 
 function cargarCarrito() {
   carritoLista.innerHTML = "";
@@ -248,7 +248,8 @@ function cargarCarrito() {
     const box = document.createElement("div");
     box.className = "carrito-item";
 
-    const imgSrc = item.origen === "marketplace"
+    const imgSrc =
+      item.origen === "marketplace"
         ? item.imagen
         : "../tienda/img/" + item.imagen;
 
@@ -266,18 +267,36 @@ function cargarCarrito() {
   carritoTotal.textContent = total.toFixed(2) + "€";
 }
 
+
+/* ===============================
+   COMPRAR — MOVIMIENTOS INDIVIDUALES
+=============================== */
+
 btnComprar.onclick = () => {
-  const total = cart.reduce((t, i) => t + i.precio * i.qty, 0);
 
-  if (currentUser.saldo < total)
-    return alert("No tienes saldo suficiente.");
+  if (!cart.length) return alert("Carrito vacío.");
 
+  let total = cart.reduce((t, p) => t + p.precio * p.qty, 0);
+
+  if (currentUser.saldo < total) {
+    alert("No tienes saldo suficiente.");
+    return;
+  }
+
+  // DESCONTAR SALDO
   currentUser.saldo -= total;
-  movimientosPush("compra", -total, "Compra realizada");
-
   guardarUsuario();
   cargarSaldo();
 
+  // CREAR MOVIMIENTO SEPARADO POR CADA ARTÍCULO
+  cart.forEach(item => {
+    const monto = -(item.precio * item.qty);
+    const descripcion = `${item.nombre} — ${item.precio}€ x ${item.qty}`;
+
+    movimientosPush("compra", monto, descripcion);
+  });
+
+  // VACÍAR CARRITO
   cart = [];
   localStorage.setItem(LS_CART, JSON.stringify(cart));
   cargarCarrito();
@@ -287,8 +306,8 @@ btnComprar.onclick = () => {
 
 
 /* ===============================
-   MOVIMIENTOS
-   =============================== */
+   MOSTRAR MOVIMIENTOS
+=============================== */
 
 function cargarMovimientos() {
   tablaMovBody.innerHTML = "";
@@ -309,8 +328,10 @@ function cargarMovimientos() {
 
 function movimientosPush(tipo, monto, desc) {
   const mov = {
-    id: "mov_" + Date.now(),
+    id: "mov_" + Date.now() + "_" + Math.floor(Math.random()*9999),
     usuario: currentUser.id,
+    usuarioNombre: currentUser.usuario,      // extra para admin panel
+    usuarioEmail: currentUser.email,         // extra para admin
     tipo,
     monto,
     descripcion: desc,
@@ -324,7 +345,7 @@ function movimientosPush(tipo, monto, desc) {
 
 /* ===============================
    HACERSE ADMIN
-   =============================== */
+=============================== */
 
 if (btnHacerAdmin) {
     btnHacerAdmin.onclick = () => {
@@ -345,7 +366,7 @@ if (btnHacerAdmin) {
 
 /* ===============================
    GUARDAR USUARIO
-   =============================== */
+=============================== */
 
 function guardarUsuario() {
   const index = users.findIndex(u => u.id === currentUser.id);
@@ -358,7 +379,7 @@ function guardarUsuario() {
 
 /* ===============================
    LOGOUT
-   =============================== */
+=============================== */
 
 btnLogout.onclick = () => {
   localStorage.removeItem(LS_CURRENT);
@@ -368,7 +389,7 @@ btnLogout.onclick = () => {
 
 /* ===============================
    INICIALIZACIÓN
-   =============================== */
+=============================== */
 
 cargarInfo();
 cargarEditar();

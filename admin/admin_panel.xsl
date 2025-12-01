@@ -19,7 +19,6 @@
   <nav>
     <a href="../index/index.xml">Inicio</a>
     <a href="../perfil/perfil_usuario.xml">Perfil</a>
-    <a href="../marketplace/marketplace.xml">Marketplace</a>
   </nav>
 </header>
 

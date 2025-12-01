@@ -1,227 +1,388 @@
-/* =============================
-   CONSTANTES
-============================= */
+document.addEventListener("DOMContentLoaded", () => {
 
-const LS_USERS = "CITECH_users_v1";
-const LS_CURRENT = "CITECH_currentUser_v1";
-const LS_PRODUCTS = "CITECH_products_v1";
-const LS_MARKET = "CITECH_market_v1";
-const LS_MOV = "CITECH_movements_v1";
-const LS_BUYS = "CITECH_buys_v1";
+    /* ============================
+       CONSTANTES
+    ============================ */
+    const LS_USERS   = "CITECH_users_v1";
+    const LS_MARKET  = "CITECH_market_v1";
+    const LS_CART    = "CITECH_cart_v1";
+    const LS_MOV     = "CITECH_movements_v1";
+    const LS_BUYS    = "CITECH_buys_v1";
+    const LS_CURRENT = "CITECH_currentUser_v1";
 
-/* =============================
-   CARGA
-============================= */
+    let current = JSON.parse(localStorage.getItem(LS_CURRENT) || "null");
+    let users   = JSON.parse(localStorage.getItem(LS_USERS)   || "[]");
+    let market  = JSON.parse(localStorage.getItem(LS_MARKET)  || "[]");
+    let movs    = JSON.parse(localStorage.getItem(LS_MOV)     || "[]");
+    let buys    = JSON.parse(localStorage.getItem(LS_BUYS)    || "[]");
 
-let users = JSON.parse(localStorage.getItem(LS_USERS) || "[]");
-let current = JSON.parse(localStorage.getItem(LS_CURRENT) || "null");
-
-if (!current || current.rol !== "admin") {
-    alert("Acceso denegado. No eres administrador.");
-    window.location.href = "../perfil/perfil_usuario.xml";
-}
-
-let products = JSON.parse(localStorage.getItem(LS_PRODUCTS) || "[]");
-let market = JSON.parse(localStorage.getItem(LS_MARKET) || "[]");
-let movements = JSON.parse(localStorage.getItem(LS_MOV) || "[]");
-let buys = JSON.parse(localStorage.getItem(LS_BUYS) || "[]");
-
-
-/* =============================
-   NAVEGACIÓN PANELES
-============================= */
-
-document.querySelectorAll(".admin-menu button").forEach(btn => {
-    btn.onclick = () => {
-        document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
-        document.querySelector("#panel-" + btn.dataset.panel).classList.add("active");
-    };
-});
-
-
-/* =============================
-   USUARIOS
-============================= */
-
-function cargarUsuarios() {
-    const tbody = document.querySelector("#tabla-usuarios");
-    tbody.innerHTML = "";
-
-    users.forEach(u => {
-        const tr = document.createElement("tr");
-
-        tr.innerHTML = `
-            <td>${u.id}</td>
-            <td>${u.usuario}</td>
-            <td>${u.email}</td>
-            <td>${u.rol}</td>
-            <td>
-                <button class="btn-role" data-id="${u.id}">
-                    Cambiar rol
-                </button>
-            </td>
-        `;
-
-        tbody.appendChild(tr);
-    });
-
-    document.querySelectorAll(".btn-role").forEach(btn => {
-        btn.onclick = () => cambiarRol(btn.dataset.id);
-    });
-}
-
-function cambiarRol(id) {
-    const u = users.find(x => x.id === id);
-    if (!u) return;
-
-    u.rol = u.rol === "admin" ? "user" : "admin";
-
-    localStorage.setItem(LS_USERS, JSON.stringify(users));
-
-    // actualizar current si corresponde
-    if (current.id === id) {
-        current.rol = u.rol;
-        localStorage.setItem(LS_CURRENT, JSON.stringify(current));
+    if (!current || current.rol !== "admin") {
+        alert("No tienes permisos para acceder al panel administrador.");
+        window.location.href = "../index/index.xml";
+        return;
     }
 
-    cargarUsuarios();
-}
+    /* =====================================
+       SIDEBAR — CAMBIO DE PANELES
+    ===================================== */
+    const sidebar = document.querySelectorAll(".admin-sidebar li");
+    const panels  = document.querySelectorAll(".panel");
 
+    sidebar.forEach(item => {
+        item.addEventListener("click", () => {
+            sidebar.forEach(i => i.classList.remove("sel"));
+            item.classList.add("sel");
 
-/* =============================
-   STOCK TIENDA
-============================= */
+            const target = item.getAttribute("data-panel");
 
-function cargarStockTienda() {
-    const cont = document.querySelector("#stock-tienda");
-    cont.innerHTML = "";
+            panels.forEach(panel => panel.classList.remove("active"));
 
-    products.forEach(p => {
-        const div = document.createElement("div");
-        div.className = "producto-admin";
-
-        div.innerHTML = `
-            <h3>${p.nombre}</h3>
-            <p>Stock actual: ${p.stock}</p>
-            <input type="number" min="0" value="${p.stock}" class="input-stock">
-            <button class="guardar-stock" data-id="${p.id}">
-                Guardar
-            </button>
-        `;
-
-        cont.appendChild(div);
+            const panelTarget = document.getElementById(`panel-${target}`);
+            if (panelTarget) panelTarget.classList.add("active");
+        });
     });
 
-    document.querySelectorAll(".guardar-stock").forEach(btn => {
-        btn.onclick = () => {
-            const id = btn.dataset.id;
-            const nuevoStock = Number(btn.parentElement.querySelector(".input-stock").value);
+    /* =====================================
+       DASHBOARD
+    ===================================== */
+    function refreshDashboard() {
+        users  = JSON.parse(localStorage.getItem(LS_USERS)  || "[]");
+        market = JSON.parse(localStorage.getItem(LS_MARKET) || "[]");
+        movs   = JSON.parse(localStorage.getItem(LS_MOV)    || "[]");
+        buys   = JSON.parse(localStorage.getItem(LS_BUYS)   || "[]");
 
-            const prod = products.find(x => x.id == id);
-            prod.stock = nuevoStock;
+        document.getElementById("count-users-val").textContent  = users.length;
+        document.getElementById("count-market-val").textContent = market.length;
+        document.getElementById("count-mov-val").textContent    = movs.length;
+        document.getElementById("count-buys-val").textContent   = buys.length;
+    }
 
-            localStorage.setItem(LS_PRODUCTS, JSON.stringify(products));
-            alert("Stock actualizado.");
+    refreshDashboard();
+
+
+    /* =====================================
+       USUARIOS
+    ===================================== */
+    function loadUsuarios() {
+        users = JSON.parse(localStorage.getItem(LS_USERS) || "[]");
+        const cont = document.getElementById("usuarios-list");
+
+        if (!users.length) {
+            cont.innerHTML = "<p>No hay usuarios registrados.</p>";
+            return;
+        }
+
+        let html = `
+            <table>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+        `;
+
+        users.forEach(u => {
+            html += `
+               <tr>
+                   <td>${u.usuario}</td>
+                   <td>${u.email}</td>
+                   <td>${u.telefono}</td>
+                   <td>${u.rol}</td>
+                   <td>
+                       <button class="btn small" data-id="${u.id}" data-action="admin">Hacer Admin</button>
+                       <button class="btn small danger" data-id="${u.id}" data-action="del">Eliminar</button>
+                   </td>
+               </tr>`;
+        });
+
+        html += "</table>";
+        cont.innerHTML = html;
+    }
+
+    loadUsuarios();
+
+
+    /* =====================================
+       MARKETPLACE 
+    ===================================== */
+    function loadMarket() {
+        market = JSON.parse(localStorage.getItem(LS_MARKET) || "[]");
+        users  = JSON.parse(localStorage.getItem(LS_USERS)  || "[]");
+
+        const cont = document.getElementById("market-list");
+        const q    = document.getElementById("market-search").value.toLowerCase();
+        const cat  = document.getElementById("market-filter-cat").value;
+
+        let productos = [...market];
+
+        if (q) {
+            productos = productos.filter(p =>
+                p.nombre.toLowerCase().includes(q) ||
+                users.find(u => u.id === p.vendedor)?.usuario.toLowerCase().includes(q)
+            );
+        }
+
+        if (cat !== "todos") {
+            productos = productos.filter(p => p.categoria === cat);
+        }
+
+        if (!productos.length) {
+            cont.innerHTML = "<p>No hay productos.</p>";
+            return;
+        }
+
+        let html = `
+            <table>
+                <tr>
+                    <th>Producto</th><th>Precio</th>
+                    <th>Categoría</th><th>Stock</th>
+                    <th>Vendedor</th>
+                </tr>
+        `;
+
+        productos.forEach(p => {
+            const v = users.find(u => u.id === p.vendedor);
+
+            html += `
+            <tr>
+                <td>${p.nombre}</td>
+                <td>${p.precio}€</td>
+                <td>${p.categoria}</td>
+                <td>${p.stock}</td>
+                <td>${v ? v.usuario + " (" + v.email + ")" : "?"}</td>
+            </tr>
+            `;
+        });
+
+        html += "</table>";
+        cont.innerHTML = html;
+    }
+
+    document.getElementById("btn-refrescar-market").onclick = loadMarket;
+    document.getElementById("market-search").oninput = loadMarket;
+    document.getElementById("market-filter-cat").onchange = loadMarket;
+
+
+    /* =====================================
+       MOVIMIENTOS (con filtros funcionales)
+    ===================================== */
+    function loadMovimientos() {
+        movs   = JSON.parse(localStorage.getItem(LS_MOV) || "[]");
+        users  = JSON.parse(localStorage.getItem(LS_USERS) || "[]");
+
+        const cont = document.getElementById("mov-list");
+        const q    = document.getElementById("mov-search").value.toLowerCase();
+        const fil  = document.getElementById("mov-filter-type").value;
+
+        let resultados = [...movs];
+
+        if (fil !== "todos") {
+            resultados = resultados.filter(m => m.tipo === fil);
+        }
+
+        if (q) {
+            resultados = resultados.filter(m => {
+                const user = users.find(u => u.id === m.usuario);
+                const uname = user ? user.usuario.toLowerCase() : "";
+                const email = user ? user.email.toLowerCase() : "";
+
+                return (
+                    uname.includes(q) ||
+                    email.includes(q) ||
+                    m.tipo.toLowerCase().includes(q) ||
+                    m.descripcion.toLowerCase().includes(q)
+                );
+            });
+        }
+
+        if (!resultados.length) {
+            cont.innerHTML = "<p>No hay movimientos que coincidan.</p>";
+            return;
+        }
+
+        let html = `
+        <table>
+            <tr>
+                <th>Fecha</th>
+                <th>Usuario</th>
+                <th>Tipo</th>
+                <th>Monto</th>
+                <th>Descripción</th>
+            </tr>
+        `;
+
+        resultados.forEach(m => {
+            const user = users.find(u => u.id === m.usuario);
+            const visibleUser = user ? `${user.usuario} (${user.email})` : "Desconocido";
+
+            html += `
+                <tr>
+                    <td>${new Date(m.fecha).toLocaleString()}</td>
+                    <td>${visibleUser}</td>
+                    <td>${m.tipo}</td>
+                    <td>${m.monto}€</td>
+                    <td>${m.descripcion}</td>
+                </tr>
+            `;
+        });
+
+        html += "</table>";
+        cont.innerHTML = html;
+    }
+
+    document.getElementById("mov-search").oninput = loadMovimientos;
+    document.getElementById("mov-filter-type").onchange = loadMovimientos;
+    document.getElementById("btn-export-mov").onclick = loadMovimientos;
+
+
+    /* =====================================
+       COMPRAS (con filtros funcionales)
+    ===================================== */
+    function loadCompras() {
+        buys  = JSON.parse(localStorage.getItem(LS_BUYS) || "[]");
+        users = JSON.parse(localStorage.getItem(LS_USERS) || "[]");
+
+        const cont = document.getElementById("buys-list");
+        const q    = document.getElementById("buys-search").value.toLowerCase();
+
+        let lista = [...buys];
+
+        if (q) {
+            lista = lista.filter(b => {
+                const user = users.find(u => u.id === b.usuario);
+                const uname = user ? user.usuario.toLowerCase() : "";
+                const email = user ? user.email.toLowerCase() : "";
+
+                return (
+                    uname.includes(q) ||
+                    email.includes(q) ||
+                    b.producto.toLowerCase().includes(q)
+                );
+            });
+        }
+
+        if (!lista.length) {
+            cont.innerHTML = "<p>No hay compras registradas.</p>";
+            return;
+        }
+
+        let html = `
+        <table>
+            <tr>
+                <th>Fecha</th>
+                <th>Usuario</th>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+            </tr>
+        `;
+
+        lista.forEach(b => {
+            const user = users.find(u => u.id === b.usuario);
+            const visibleUser = user ? `${user.usuario} (${user.email})` : "Desconocido";
+
+            html += `
+                <tr>
+                    <td>${new Date(b.fecha).toLocaleString()}</td>
+                    <td>${visibleUser}</td>
+                    <td>${b.producto}</td>
+                    <td>${b.qty}</td>
+                    <td>${b.total}€</td>
+                </tr>`;
+        });
+
+        html += "</table>";
+        cont.innerHTML = html;
+    }
+
+    document.getElementById("buys-search").oninput = loadCompras;
+    document.getElementById("btn-refrescar-buys").onclick = loadCompras;
+
+
+    /* =====================================
+       BOTÓN GLOBAL DE RECARGA
+    ===================================== */
+    const btnRecalc = document.querySelector("#btn-recalc");
+    if (btnRecalc) {
+        btnRecalc.onclick = () => {
+            refreshDashboard();
+            loadUsuarios();
+            loadMarket();
+            loadMovimientos();
+            loadCompras();
+            alert("Totales recalculados.");
         };
-    });
-}
+    }
 
 
-/* =============================
-   MARKETPLACE
-============================= */
+    /* =====================================
+       BOTÓN CLEAR MARKET
+    ===================================== */
+    const btnClearMarket = document.querySelector("#btn-clear-market");
+    if (btnClearMarket) {
+        btnClearMarket.onclick = () => {
+            if (!confirm("¿Seguro que deseas eliminar TODO el marketplace?")) return;
 
-function cargarMarketAdmin() {
-    const cont = document.querySelector("#lista-market-admin");
-    cont.innerHTML = "";
-
-    market.forEach(p => {
-        const div = document.createElement("div");
-        div.className = "producto-admin";
-
-        div.innerHTML = `
-            <img src="${p.imagen}" />
-            <h3>${p.nombre}</h3>
-            <p>Stock: ${p.stock}</p>
-            <input type="number" min="0" value="${p.stock}" class="input-stock">
-            <button class="guardar-market" data-id="${p.id}">Guardar</button>
-        `;
-
-        cont.appendChild(div);
-    });
-
-    document.querySelectorAll(".guardar-market").forEach(btn => {
-        btn.onclick = () => {
-            const id = btn.dataset.id;
-            const prod = market.find(m => m.id === id);
-            const nuevo = Number(btn.parentElement.querySelector(".input-stock").value);
-
-            prod.stock = nuevo;
-
-            localStorage.setItem(LS_MARKET, JSON.stringify(market));
-            alert("Stock actualizado.");
+            localStorage.setItem(LS_MARKET, "[]");
+            loadMarket();
+            refreshDashboard();
         };
+    }
+
+
+    /* =====================================
+       LOGOUT ADMIN
+    ===================================== */
+    const btnLogout = document.querySelector("#btn-admin-logout");
+
+    if (btnLogout) {
+        btnLogout.onclick = () => {
+            localStorage.removeItem(LS_CURRENT);
+            window.location.href = "../index/index.xml";
+        };
+    }
+
+
+    /* =====================================
+       DELEGACIÓN: BOTONES ADMIN / DEL
+    ===================================== */
+    document.addEventListener("click", e => {
+
+        if (e.target.matches("[data-action]")) {
+            let id = e.target.dataset.id;
+            let action = e.target.dataset.action;
+
+            // HACER ADMIN
+            if (action === "admin") {
+                users = JSON.parse(localStorage.getItem(LS_USERS) || "[]");
+                let u = users.find(x => x.id === id);
+                if (!u) return;
+
+                u.rol = "admin";
+                localStorage.setItem(LS_USERS, JSON.stringify(users));
+                alert("Ahora es administrador.");
+                loadUsuarios();
+            }
+
+            // ELIMINAR USUARIO
+            if (action === "del") {
+                let users = JSON.parse(localStorage.getItem(LS_USERS) || "[]");
+                users = users.filter(u => u.id !== id);
+                localStorage.setItem(LS_USERS, JSON.stringify(users));
+                alert("Usuario eliminado.");
+                loadUsuarios();
+            }
+        }
     });
-}
 
 
-/* =============================
-   MOVIMIENTOS
-============================= */
+    /* =====================================
+       INICIALIZACIÓN
+    ===================================== */
+    loadMarket();
+    loadMovimientos();
+    loadCompras();
 
-function cargarMovimientos() {
-    const tbody = document.querySelector("#tabla-mov-admin");
-    tbody.innerHTML = "";
-
-    movements.forEach(m => {
-        const user = users.find(u => u.id === m.usuario);
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td>${user ? user.usuario : "Desconocido"}</td>
-            <td>${m.tipo}</td>
-            <td>${m.monto}€</td>
-            <td>${m.descripcion}</td>
-            <td>${new Date(m.fecha).toLocaleString()}</td>
-        `;
-        tbody.appendChild(tr);
-    });
-}
-
-
-/* =============================
-   COMPRAS
-============================= */
-
-function cargarCompras() {
-    const cont = document.querySelector("#compras-admin");
-    cont.innerHTML = "";
-
-    buys.forEach(b => {
-        const u = users.find(x => x.id == b.usuario);
-
-        const div = document.createElement("div");
-        div.className = "producto-admin";
-
-        div.innerHTML = `
-            <h3>Compra ID: ${b.id}</h3>
-            <p>Usuario: ${u ? u.usuario : "Desconocido"}</p>
-            <p>Total: ${b.total}€</p>
-            <p>Fecha: ${new Date(b.fecha).toLocaleString()}</p>
-        `;
-
-        cont.appendChild(div);
-    });
-}
-
-
-/* =============================
-   INIT
-============================= */
-
-cargarUsuarios();
-cargarStockTienda();
-cargarMarketAdmin();
-cargarMovimientos();
-cargarCompras();
-
+});
