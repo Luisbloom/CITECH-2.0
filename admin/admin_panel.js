@@ -1,20 +1,19 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     /* ============================
-       CONSTANTES
+       CONSTANTES LOCALSTORAGE
     ============================ */
     const LS_USERS   = "CITECH_users_v1";
+    const LS_STORE   = "CITECH_store_v1";
     const LS_MARKET  = "CITECH_market_v1";
-    const LS_CART    = "CITECH_cart_v1";
     const LS_MOV     = "CITECH_movements_v1";
-    const LS_BUYS    = "CITECH_buys_v1";
     const LS_CURRENT = "CITECH_currentUser_v1";
 
-    let current = JSON.parse(localStorage.getItem(LS_CURRENT) || "null");
     let users   = JSON.parse(localStorage.getItem(LS_USERS)   || "[]");
+    let store   = JSON.parse(localStorage.getItem(LS_STORE)   || "[]");
     let market  = JSON.parse(localStorage.getItem(LS_MARKET)  || "[]");
     let movs    = JSON.parse(localStorage.getItem(LS_MOV)     || "[]");
-    let buys    = JSON.parse(localStorage.getItem(LS_BUYS)    || "[]");
+    let current = JSON.parse(localStorage.getItem(LS_CURRENT) || "null");
 
     if (!current || current.rol !== "admin") {
         alert("No tienes permisos para acceder al panel administrador.");
@@ -22,9 +21,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    /* =====================================
-       SIDEBAR — CAMBIO DE PANELES
-    ===================================== */
+    /* ============================
+       CAMBIO DE PANELES
+    ============================ */
     const sidebar = document.querySelectorAll(".admin-sidebar li");
     const panels  = document.querySelectorAll(".panel");
 
@@ -33,126 +32,230 @@ document.addEventListener("DOMContentLoaded", () => {
             sidebar.forEach(i => i.classList.remove("sel"));
             item.classList.add("sel");
 
-            const target = item.getAttribute("data-panel");
+            const target = item.dataset.panel;
 
-            panels.forEach(panel => panel.classList.remove("active"));
+            panels.forEach(p => p.classList.remove("active"));
+            document.getElementById("panel-" + target).classList.add("active");
 
-            const panelTarget = document.getElementById(`panel-${target}`);
-            if (panelTarget) panelTarget.classList.add("active");
+            // refrescar listas por panel
+            if (target === "tienda") loadStore();
+            if (target === "marketplace") loadMarket();
+            if (target === "movimientos") loadMovimientos();
         });
     });
 
-    /* =====================================
+    /* ============================
        DASHBOARD
-    ===================================== */
+    ============================ */
     function refreshDashboard() {
         users  = JSON.parse(localStorage.getItem(LS_USERS)  || "[]");
+        store  = JSON.parse(localStorage.getItem(LS_STORE)  || "[]");
         market = JSON.parse(localStorage.getItem(LS_MARKET) || "[]");
         movs   = JSON.parse(localStorage.getItem(LS_MOV)    || "[]");
-        buys   = JSON.parse(localStorage.getItem(LS_BUYS)   || "[]");
 
         document.getElementById("count-users-val").textContent  = users.length;
+        document.getElementById("count-store-val").textContent  = store.length;
         document.getElementById("count-market-val").textContent = market.length;
         document.getElementById("count-mov-val").textContent    = movs.length;
-        document.getElementById("count-buys-val").textContent   = buys.length;
     }
 
     refreshDashboard();
 
+    /* ============================
+       TIENDA — LISTA
+    ============================ */
+    const storeList = document.getElementById("store-list");
 
-    /* =====================================
-       USUARIOS
-    ===================================== */
-    function loadUsuarios() {
-        users = JSON.parse(localStorage.getItem(LS_USERS) || "[]");
-        const cont = document.getElementById("usuarios-list");
+    function loadStore() {
+        store = JSON.parse(localStorage.getItem(LS_STORE) || "[]");
 
-        if (!users.length) {
-            cont.innerHTML = "<p>No hay usuarios registrados.</p>";
+        if (!store.length) {
+            storeList.innerHTML = "<p>No hay productos en tienda.</p>";
             return;
         }
 
         let html = `
-            <table>
+            <table class="tbl">
                 <tr>
-                    <th>Usuario</th>
-                    <th>Email</th>
-                    <th>Teléfono</th>
-                    <th>Rol</th>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Categoría</th>
                     <th>Acciones</th>
                 </tr>
         `;
 
-        users.forEach(u => {
+        store.forEach(p => {
             html += `
-               <tr>
-                   <td>${u.usuario}</td>
-                   <td>${u.email}</td>
-                   <td>${u.telefono}</td>
-                   <td>${u.rol}</td>
-                   <td>
-                       <button class="btn small" data-id="${u.id}" data-action="admin">Hacer Admin</button>
-                       <button class="btn small danger" data-id="${u.id}" data-action="del">Eliminar</button>
-                   </td>
-               </tr>`;
+                <tr>
+                    <td>${p.nombre}</td>
+                    <td>${p.precio}€</td>
+                    <td>${p.stock}</td>
+                    <td>${p.categoria}</td>
+                    <td>
+                      <button class="btn small" data-id="${p.id}" data-action="edit-store">Editar</button>
+                      <button class="btn small danger" data-id="${p.id}" data-action="del-store">Eliminar</button>
+                    </td>
+                </tr>
+            `;
         });
 
         html += "</table>";
-        cont.innerHTML = html;
+        storeList.innerHTML = html;
     }
 
-    loadUsuarios();
+    /* ============================
+       TIENDA — MODAL FORM
+    ============================ */
+    const modal       = document.getElementById("store-form-modal");
+    const btnAddStore = document.getElementById("btn-add-store");
+    const btnSave     = document.getElementById("store-save");
+    const btnCancel   = document.getElementById("store-cancel");
 
+    const fNombre   = document.getElementById("store-nombre");
+    const fPrecio   = document.getElementById("store-precio");
+    const fStock    = document.getElementById("store-stock");
+    const fCat      = document.getElementById("store-categoria");
+    const fDesc     = document.getElementById("store-desc");
+    const fImg      = document.getElementById("store-img");
+    const fPreview  = document.getElementById("store-img-preview");
+    const formTitle = document.getElementById("store-form-title");
 
-    /* =====================================
-       MARKETPLACE 
-    ===================================== */
+    let editingID = null;
+
+    btnAddStore.onclick = () => {
+        editingID = null;
+        formTitle.textContent = "Nuevo producto";
+        fNombre.value = "";
+        fPrecio.value = "";
+        fStock.value  = "";
+        fCat.value    = "componentes";
+        fDesc.value   = "";
+        fPreview.src  = "../img/default_product.png";
+        modal.classList.remove("hidden");
+    };
+
+    btnCancel.onclick = () => modal.classList.add("hidden");
+
+    /* Imagen preview */
+    fImg.onchange = e => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = () => fPreview.src = reader.result;
+        reader.readAsDataURL(file);
+    };
+
+    /* Guardar producto */
+    btnSave.onclick = () => {
+        let img = fPreview.src;
+
+        if (!fNombre.value || !fPrecio.value || !fStock.value) {
+            alert("Rellena todos los campos obligatorios.");
+            return;
+        }
+
+        store = JSON.parse(localStorage.getItem(LS_STORE) || "[]");
+
+        if (editingID) {
+            /* EDITAR PRODUCTO */
+            let prod = store.find(p => p.id === editingID);
+            prod.nombre    = fNombre.value;
+            prod.precio    = Number(fPrecio.value);
+            prod.stock     = Number(fStock.value);
+            prod.categoria = fCat.value;
+            prod.descripcion = fDesc.value;
+            prod.imagen    = img;
+        } else {
+            /* NUEVO PRODUCTO */
+            store.push({
+                id: "store_" + Date.now(),
+                nombre: fNombre.value,
+                precio: Number(fPrecio.value),
+                stock: Number(fStock.value),
+                categoria: fCat.value,
+                descripcion: fDesc.value,
+                imagen: img
+            });
+        }
+
+        localStorage.setItem(LS_STORE, JSON.stringify(store));
+        loadStore();
+        refreshDashboard();
+        modal.classList.add("hidden");
+    };
+
+    /* ============================
+       TIENDA — ACCIONES
+    ============================ */
+    document.addEventListener("click", e => {
+        if (!e.target.matches("[data-action]")) return;
+
+        const id = e.target.dataset.id;
+        const action = e.target.dataset.action;
+
+        /* ELIMINAR PRODUCTO */
+        if (action === "del-store") {
+            if (!confirm("¿Eliminar este producto?")) return;
+            store = store.filter(p => p.id !== id);
+            localStorage.setItem(LS_STORE, JSON.stringify(store));
+            loadStore();
+            refreshDashboard();
+        }
+
+        /* EDITAR PRODUCTO */
+        if (action === "edit-store") {
+            const prod = store.find(p => p.id === id);
+            if (!prod) return;
+
+            editingID = id;
+            formTitle.textContent = "Editar producto";
+
+            fNombre.value = prod.nombre;
+            fPrecio.value = prod.precio;
+            fStock.value  = prod.stock;
+            fCat.value    = prod.categoria;
+            fDesc.value   = prod.descripcion;
+            fPreview.src  = prod.imagen;
+
+            modal.classList.remove("hidden");
+        }
+    });
+
+    /* ============================
+       MARKETPLACE
+    ============================ */
     function loadMarket() {
         market = JSON.parse(localStorage.getItem(LS_MARKET) || "[]");
-        users  = JSON.parse(localStorage.getItem(LS_USERS)  || "[]");
+        users  = JSON.parse(localStorage.getItem(LS_USERS) || "[]");
 
         const cont = document.getElementById("market-list");
-        const q    = document.getElementById("market-search").value.toLowerCase();
-        const cat  = document.getElementById("market-filter-cat").value;
 
-        let productos = [...market];
-
-        if (q) {
-            productos = productos.filter(p =>
-                p.nombre.toLowerCase().includes(q) ||
-                users.find(u => u.id === p.vendedor)?.usuario.toLowerCase().includes(q)
-            );
-        }
-
-        if (cat !== "todos") {
-            productos = productos.filter(p => p.categoria === cat);
-        }
-
-        if (!productos.length) {
-            cont.innerHTML = "<p>No hay productos.</p>";
+        if (!market.length) {
+            cont.innerHTML = "<p>No hay anuncios en marketplace.</p>";
             return;
         }
 
         let html = `
-            <table>
-                <tr>
-                    <th>Producto</th><th>Precio</th>
-                    <th>Categoría</th><th>Stock</th>
-                    <th>Vendedor</th>
-                </tr>
+        <table class="tbl">
+          <tr>
+            <th>Producto</th>
+            <th>Precio</th>
+            <th>Categoría</th>
+            <th>Stock</th>
+            <th>Vendedor</th>
+          </tr>
         `;
 
-        productos.forEach(p => {
+        market.forEach(p => {
             const v = users.find(u => u.id === p.vendedor);
-
             html += `
-            <tr>
-                <td>${p.nombre}</td>
-                <td>${p.precio}€</td>
-                <td>${p.categoria}</td>
-                <td>${p.stock}</td>
-                <td>${v ? v.usuario + " (" + v.email + ")" : "?"}</td>
-            </tr>
+                <tr>
+                    <td>${p.nombre}</td>
+                    <td>${p.precio}€</td>
+                    <td>${p.categoria}</td>
+                    <td>${p.stock}</td>
+                    <td>${v ? v.usuario : "?"}</td>
+                </tr>
             `;
         });
 
@@ -160,67 +263,47 @@ document.addEventListener("DOMContentLoaded", () => {
         cont.innerHTML = html;
     }
 
-    document.getElementById("btn-refrescar-market").onclick = loadMarket;
-    document.getElementById("market-search").oninput = loadMarket;
-    document.getElementById("market-filter-cat").onchange = loadMarket;
+    /* ============================
+       MOVIMIENTOS
+    ============================ */
+    const movList = document.getElementById("mov-list");
+    const movSearch = document.getElementById("mov-search");
 
-
-    /* =====================================
-       MOVIMIENTOS (con filtros funcionales)
-    ===================================== */
     function loadMovimientos() {
-        movs   = JSON.parse(localStorage.getItem(LS_MOV) || "[]");
-        users  = JSON.parse(localStorage.getItem(LS_USERS) || "[]");
+        movs = JSON.parse(localStorage.getItem(LS_MOV) || "[]");
+        users = JSON.parse(localStorage.getItem(LS_USERS) || "[]");
 
-        const cont = document.getElementById("mov-list");
-        const q    = document.getElementById("mov-search").value.toLowerCase();
-        const fil  = document.getElementById("mov-filter-type").value;
+        let q = movSearch.value.toLowerCase();
+        let lista = movs.filter(m => {
+            const user = users.find(u => u.id === m.usuario) || {};
+            return (
+                (user.usuario || "").toLowerCase().includes(q) ||
+                (m.descripcion || "").toLowerCase().includes(q)
+            );
+        });
 
-        let resultados = [...movs];
-
-        if (fil !== "todos") {
-            resultados = resultados.filter(m => m.tipo === fil);
-        }
-
-        if (q) {
-            resultados = resultados.filter(m => {
-                const user = users.find(u => u.id === m.usuario);
-                const uname = user ? user.usuario.toLowerCase() : "";
-                const email = user ? user.email.toLowerCase() : "";
-
-                return (
-                    uname.includes(q) ||
-                    email.includes(q) ||
-                    m.tipo.toLowerCase().includes(q) ||
-                    m.descripcion.toLowerCase().includes(q)
-                );
-            });
-        }
-
-        if (!resultados.length) {
-            cont.innerHTML = "<p>No hay movimientos que coincidan.</p>";
+        if (!lista.length) {
+            movList.innerHTML = "<p>No hay movimientos registrados.</p>";
             return;
         }
 
         let html = `
-        <table>
+        <table class="tbl">
             <tr>
-                <th>Fecha</th>
-                <th>Usuario</th>
-                <th>Tipo</th>
-                <th>Monto</th>
-                <th>Descripción</th>
+              <th>Fecha</th>
+              <th>Usuario</th>
+              <th>Tipo</th>
+              <th>Monto</th>
+              <th>Descripción</th>
             </tr>
         `;
 
-        resultados.forEach(m => {
+        lista.forEach(m => {
             const user = users.find(u => u.id === m.usuario);
-            const visibleUser = user ? `${user.usuario} (${user.email})` : "Desconocido";
-
             html += `
                 <tr>
                     <td>${new Date(m.fecha).toLocaleString()}</td>
-                    <td>${visibleUser}</td>
+                    <td>${user ? user.usuario : "?"}</td>
                     <td>${m.tipo}</td>
                     <td>${m.monto}€</td>
                     <td>${m.descripcion}</td>
@@ -229,160 +312,41 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         html += "</table>";
-        cont.innerHTML = html;
+        movList.innerHTML = html;
     }
 
-    document.getElementById("mov-search").oninput = loadMovimientos;
-    document.getElementById("mov-filter-type").onchange = loadMovimientos;
-    document.getElementById("btn-export-mov").onclick = loadMovimientos;
+    movSearch.oninput = loadMovimientos;
 
+    /* ============================
+       HERRAMIENTAS
+    ============================ */
+    document.getElementById("btn-clear-market").onclick = () => {
+        if (!confirm("¿Vaciar marketplace?")) return;
+        localStorage.setItem(LS_MARKET, "[]");
+        loadMarket();
+        refreshDashboard();
+    };
 
-    /* =====================================
-       COMPRAS (con filtros funcionales)
-    ===================================== */
-    function loadCompras() {
-        buys  = JSON.parse(localStorage.getItem(LS_BUYS) || "[]");
-        users = JSON.parse(localStorage.getItem(LS_USERS) || "[]");
+    document.getElementById("btn-recalc").onclick = () => {
+        refreshDashboard();
+        loadStore();
+        loadMarket();
+        loadMovimientos();
+        alert("Datos actualizados.");
+    };
 
-        const cont = document.getElementById("buys-list");
-        const q    = document.getElementById("buys-search").value.toLowerCase();
+    /* ============================
+       LOGOUT
+    ============================ */
+    document.getElementById("btn-admin-logout").onclick = () => {
+        localStorage.removeItem(LS_CURRENT);
+        window.location.href = "../index/index.xml";
+    };
 
-        let lista = [...buys];
-
-        if (q) {
-            lista = lista.filter(b => {
-                const user = users.find(u => u.id === b.usuario);
-                const uname = user ? user.usuario.toLowerCase() : "";
-                const email = user ? user.email.toLowerCase() : "";
-
-                return (
-                    uname.includes(q) ||
-                    email.includes(q) ||
-                    b.producto.toLowerCase().includes(q)
-                );
-            });
-        }
-
-        if (!lista.length) {
-            cont.innerHTML = "<p>No hay compras registradas.</p>";
-            return;
-        }
-
-        let html = `
-        <table>
-            <tr>
-                <th>Fecha</th>
-                <th>Usuario</th>
-                <th>Producto</th>
-                <th>Cantidad</th>
-                <th>Total</th>
-            </tr>
-        `;
-
-        lista.forEach(b => {
-            const user = users.find(u => u.id === b.usuario);
-            const visibleUser = user ? `${user.usuario} (${user.email})` : "Desconocido";
-
-            html += `
-                <tr>
-                    <td>${new Date(b.fecha).toLocaleString()}</td>
-                    <td>${visibleUser}</td>
-                    <td>${b.producto}</td>
-                    <td>${b.qty}</td>
-                    <td>${b.total}€</td>
-                </tr>`;
-        });
-
-        html += "</table>";
-        cont.innerHTML = html;
-    }
-
-    document.getElementById("buys-search").oninput = loadCompras;
-    document.getElementById("btn-refrescar-buys").onclick = loadCompras;
-
-
-    /* =====================================
-       BOTÓN GLOBAL DE RECARGA
-    ===================================== */
-    const btnRecalc = document.querySelector("#btn-recalc");
-    if (btnRecalc) {
-        btnRecalc.onclick = () => {
-            refreshDashboard();
-            loadUsuarios();
-            loadMarket();
-            loadMovimientos();
-            loadCompras();
-            alert("Totales recalculados.");
-        };
-    }
-
-
-    /* =====================================
-       BOTÓN CLEAR MARKET
-    ===================================== */
-    const btnClearMarket = document.querySelector("#btn-clear-market");
-    if (btnClearMarket) {
-        btnClearMarket.onclick = () => {
-            if (!confirm("¿Seguro que deseas eliminar TODO el marketplace?")) return;
-
-            localStorage.setItem(LS_MARKET, "[]");
-            loadMarket();
-            refreshDashboard();
-        };
-    }
-
-
-    /* =====================================
-       LOGOUT ADMIN
-    ===================================== */
-    const btnLogout = document.querySelector("#btn-admin-logout");
-
-    if (btnLogout) {
-        btnLogout.onclick = () => {
-            localStorage.removeItem(LS_CURRENT);
-            window.location.href = "../index/index.xml";
-        };
-    }
-
-
-    /* =====================================
-       DELEGACIÓN: BOTONES ADMIN / DEL
-    ===================================== */
-    document.addEventListener("click", e => {
-
-        if (e.target.matches("[data-action]")) {
-            let id = e.target.dataset.id;
-            let action = e.target.dataset.action;
-
-            // HACER ADMIN
-            if (action === "admin") {
-                users = JSON.parse(localStorage.getItem(LS_USERS) || "[]");
-                let u = users.find(x => x.id === id);
-                if (!u) return;
-
-                u.rol = "admin";
-                localStorage.setItem(LS_USERS, JSON.stringify(users));
-                alert("Ahora es administrador.");
-                loadUsuarios();
-            }
-
-            // ELIMINAR USUARIO
-            if (action === "del") {
-                let users = JSON.parse(localStorage.getItem(LS_USERS) || "[]");
-                users = users.filter(u => u.id !== id);
-                localStorage.setItem(LS_USERS, JSON.stringify(users));
-                alert("Usuario eliminado.");
-                loadUsuarios();
-            }
-        }
-    });
-
-
-    /* =====================================
+    /* ============================
        INICIALIZACIÓN
-    ===================================== */
+    ============================ */
+    loadStore();
     loadMarket();
     loadMovimientos();
-    loadCompras();
-
 });
