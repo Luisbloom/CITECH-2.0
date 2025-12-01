@@ -74,11 +74,22 @@
                 <option value="otros">Otros</option>
             </select>
 
+            <label>Stock</label>
+            <input type="number" id="pub-stock" min="1" required="required"/>
+
             <label>Imagen</label>
             <input type="file" id="pub-imagen" accept="image/*"/>
 
-            <button type="button" id="btn-publicar" class="btn-primary">Publicar</button>
-            <button type="button" id="btn-volver" class="btn-sec">Volver al Marketplace</button>
+            <div class="botones">
+                <button type="button" id="btn-publicar" class="btn-primary">
+                    Publicar
+                </button>
+
+                <button type="button" id="btn-volver" class="btn-sec">
+                    Volver al Marketplace
+                </button>
+            </div>
+
         </form>
     </section>
 

@@ -5,7 +5,9 @@
 const LS_USERS = "CITECH_users_v1";
 const LS_CURRENT = "CITECH_currentUser_v1";
 const LS_MARKET = "CITECH_market_v1";
-const LS_CART = "CITECH_cart_v1";   // MISMO NOMBRE QUE LA TIENDA
+const LS_CART = "CITECH_cart_v1";
+const LS_MOV = "CITECH_movements_v1";
+const LS_BUYS = "CITECH_buys_v1";
 
 /* ===============================
    CARGA DE DATOS
@@ -14,9 +16,10 @@ const LS_CART = "CITECH_cart_v1";   // MISMO NOMBRE QUE LA TIENDA
 let users = JSON.parse(localStorage.getItem(LS_USERS) || "[]");
 let current = JSON.parse(localStorage.getItem(LS_CURRENT) || "null");
 let market = JSON.parse(localStorage.getItem(LS_MARKET) || "[]");
+let cart = JSON.parse(localStorage.getItem(LS_CART) || "[]");
 
 if (!current) {
-    alert("Debe iniciar sesión.");
+    alert("Debes iniciar sesión.");
     window.location.href = "../usuarios/login.xml";
 }
 
@@ -34,8 +37,24 @@ const btnIrPublicar = document.querySelector("#btn-ir-publicar");
 const btnVolver = document.querySelector("#btn-volver");
 const btnPublicar = document.querySelector("#btn-publicar");
 
+const pubNombre = document.querySelector("#pub-nombre");
+const pubPrecio = document.querySelector("#pub-precio");
+const pubCategoria = document.querySelector("#pub-categoria");
+const pubStock = document.querySelector("#pub-stock");
+const pubImagen = document.querySelector("#pub-imagen");
+
 /* ===============================
-   MOSTRAR PANELES
+   UTIL: resolver ruta de imagen
+   =============================== */
+function resolveImageSrc(imagen) {
+    if (!imagen) return "../img/noimage.png";
+    if (imagen.startsWith("data:")) return imagen;
+    if (imagen.startsWith("http") || imagen.startsWith("../")) return imagen;
+    return "../tienda/img/" + imagen;
+}
+
+/* ===============================
+   PANELES
    =============================== */
 
 btnIrPublicar.onclick = () => {
@@ -49,129 +68,164 @@ btnVolver.onclick = () => {
 };
 
 /* ===============================
-   MOSTRAR PRODUCTOS DEL MARKETPLACE
-   =============================== */
-
-function cargarMarketplace() {
-    lista.innerHTML = "";
-
-    let productos = [...market].reverse();
-
-    if (filtro.value !== "todos") {
-        productos = productos.filter(p => p.categoria === filtro.value);
-    }
-
-    if (productos.length === 0) {
-        lista.innerHTML = "<p>No hay productos para mostrar.</p>";
-        return;
-    }
-
-    productos.forEach(p => crearCajaProducto(p));
-}
-
-function crearCajaProducto(p) {
-    const vendedor = users.find(u => u.id === p.vendedor);
-
-    const caja = document.createElement("div");
-    caja.className = "producto";
-
-    caja.innerHTML = `
-        <img src="${p.imagen}"/>
-        <h3>${p.nombre}</h3>
-        <p class="precio">${p.precio} €</p>
-        <p class="categoria">${p.categoria}</p>
-        <p class="vendedor">Vendedor: ${vendedor ? vendedor.usuario : "Desconocido"}</p>
-        <button class="btn-comprar">Añadir al carrito</button>
-    `;
-
-    caja.querySelector(".btn-comprar").onclick = () => addToCartMarketplace(p);
-
-    lista.appendChild(caja);
-}
-
-/* ===============================
-   AÑADIR AL CARRITO (MISMA LÓGICA QUE TIENDA)
-   =============================== */
-
-function addToCartMarketplace(p) {
-
-    // 1. Leer carrito global
-    let cart = JSON.parse(localStorage.getItem(LS_CART) || "[]");
-
-    // 2. Buscar si ya existe
-    let item = cart.find(i => i.id == p.id);
-
-    if (item) {
-        item.qty++;
-    } else {
-        cart.push({
-            id: p.id,
-            nombre: p.nombre,
-            precio: p.precio,
-            imagen: p.imagen,  // Marketplace usa Base64, la tienda usa img/nombre → ambas válidas
-            qty: 1
-        });
-    }
-
-    // 3. Guardar
-    localStorage.setItem(LS_CART, JSON.stringify(cart));
-
-    alert("Producto añadido al carrito. Puedes gestionarlo desde tu perfil.");
-}
-
-/* ===============================
    PUBLICAR PRODUCTO
    =============================== */
 
 btnPublicar.onclick = () => {
 
-    const nombre = document.querySelector("#pub-nombre").value.trim();
-    const precio = parseFloat(document.querySelector("#pub-precio").value);
-    const categoria = document.querySelector("#pub-categoria").value;
-    const imagenFile = document.querySelector("#pub-imagen").files[0];
+    const nombre = pubNombre.value.trim();
+    const precio = parseFloat(pubPrecio.value);
+    const categoria = pubCategoria.value;
+    const stock = parseInt(pubStock.value, 10);
+    const imagenFile = pubImagen.files[0];
 
-    if (!nombre || !precio || !categoria) {
-        alert("Debes completar todos los campos obligatorios.");
+    if (!nombre || !precio || !categoria || !stock || stock < 1) {
+        alert("Completa todos los campos.");
         return;
     }
 
-    if (!imagenFile) {
-        alert("Debes subir una imagen.");
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-
-        const nuevoProd = {
-            id: "mkp_" + Date.now(),
-            nombre,
-            precio,
-            categoria,
-            imagen: e.target.result, // BASE64
-            vendedor: current.id
+    if (imagenFile) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            createMarketProduct(nombre, precio, categoria, stock, e.target.result);
         };
-
-        market.push(nuevoProd);
-        guardarMarketplace();
-
-        alert("Producto publicado correctamente.");
-
-        publicarPanel.classList.remove("active");
-        listadoPanel.classList.add("active");
-
-        cargarMarketplace();
-    };
-
-    reader.readAsDataURL(imagenFile);
+        reader.readAsDataURL(imagenFile);
+    } else {
+        createMarketProduct(nombre, precio, categoria, stock, "../img/noimage.png");
+    }
 };
 
+function createMarketProduct(nombre, precio, categoria, stock, imagenData) {
+
+    const nuevo = {
+        id: "mkp_" + Date.now(),
+        nombre,
+        precio: Number(precio),
+        categoria,
+        imagen: imagenData,
+        stock: Number(stock),
+        vendedor: current.id,
+        fecha: new Date().toISOString()
+    };
+
+    market.push(nuevo);
+    localStorage.setItem(LS_MARKET, JSON.stringify(market));
+
+    alert("Producto publicado.");
+
+    pubNombre.value = "";
+    pubPrecio.value = "";
+    pubStock.value = "1";
+    pubCategoria.value = "componentes";
+    pubImagen.value = "";
+
+    publicarPanel.classList.remove("active");
+    listadoPanel.classList.add("active");
+    cargarMarketplace();
+}
+
 /* ===============================
-   GUARDAR LOCALSTORAGE
+   CARGAR MARKETPLACE
    =============================== */
 
-function guardarMarketplace() {
-    localStorage.setItem(LS_MARKET, JSON.stringify(market));
+function cargarMarketplace() {
+
+    market = JSON.parse(localStorage.getItem(LS_MARKET) || "[]");
+    users = JSON.parse(localStorage.getItem(LS_USERS) || "[]");
+
+    lista.innerHTML = "";
+
+    let productos = [...market].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+    if (filtro.value !== "todos") {
+        productos = productos.filter(p => p.categoria === filtro.value);
+    }
+
+    if (!productos.length) {
+        lista.innerHTML = "<p>No hay productos disponibles.</p>";
+        return;
+    }
+
+    productos.forEach(p => {
+
+        const card = document.createElement("div");
+        card.className = "producto";
+
+        const vendedor = users.find(u => u.id === p.vendedor);
+        const vendedorNombre = vendedor ? vendedor.usuario : "Usuario";
+
+        card.innerHTML = `
+            <img src="${resolveImageSrc(p.imagen)}">
+            <h3>${p.nombre}</h3>
+            <p class="precio">${p.precio.toFixed(2)} €</p>
+            <p class="categoria">${p.categoria}</p>
+            <p class="vendedor">Vendedor: ${vendedorNombre}</p>
+            <p class="stock">Stock: <strong>${p.stock}</strong></p>
+
+            <div class="add-zone">
+                <input type="number" min="1" value="1" class="qty-input">
+                <button class="btn-comprar">Añadir al carrito</button>
+            </div>
+        `;
+
+        if (p.stock <= 0) {
+            const btn = card.querySelector(".btn-comprar");
+            btn.disabled = true;
+            btn.textContent = "Agotado";
+            btn.style.opacity = "0.6";
+        } else {
+            card.querySelector(".btn-comprar").onclick = () => {
+                const qty = parseInt(card.querySelector(".qty-input").value, 10);
+                addToCartMarketplace(p.id, qty);
+            }
+        }
+
+        lista.appendChild(card);
+    });
+}
+
+/* ===============================
+   AÑADIR AL CARRITO
+   =============================== */
+
+function addToCartMarketplace(productId, quantity) {
+
+    market = JSON.parse(localStorage.getItem(LS_MARKET) || "[]");
+
+    const prod = market.find(p => p.id === productId);
+    if (!prod) {
+        alert("Este producto ya no está disponible.");
+        cargarMarketplace();
+        return;
+    }
+
+    cart = JSON.parse(localStorage.getItem(LS_CART) || "[]");
+
+    const existing = cart.find(i => i.id === productId);
+    const alreadyQty = existing ? existing.qty : 0;
+    const totalWanted = alreadyQty + quantity;
+
+    if (totalWanted > prod.stock) {
+        alert("No hay stock suficiente.");
+        return;
+    }
+
+    if (existing) {
+        existing.qty = totalWanted;
+    } else {
+        cart.push({
+            id: prod.id,
+            nombre: prod.nombre,
+            precio: prod.precio,
+            imagen: prod.imagen,
+            qty: quantity,
+            origen: "marketplace",
+            vendedor: prod.vendedor
+        });
+    }
+
+    localStorage.setItem(LS_CART, JSON.stringify(cart));
+    alert("Añadido al carrito.");
 }
 
 /* ===============================
@@ -180,8 +234,5 @@ function guardarMarketplace() {
 
 filtro.onchange = cargarMarketplace;
 
-/* ===============================
-   INICIALIZACIÓN
-   =============================== */
-
+// inicializar
 cargarMarketplace();

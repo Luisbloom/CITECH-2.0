@@ -1,0 +1,176 @@
+/* admin_panel.css - estilo limpio y funcional para el admin panel */
+
+:root{
+  --bg:#071028;
+  --card:#0f1a33;
+  --muted:#9fb6ff;
+  --accent:#00eaff;
+  --danger:#ff5964;
+  --glass: rgba(255,255,255,0.03);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:linear-gradient(180deg,#061026 0%, #08122a 100%);
+  color:#e6f0ff;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+.admin-header{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  padding:18px 28px;
+  background: linear-gradient(90deg, rgba(10,18,35,0.9), rgba(6,12,28,0.9));
+  border-bottom:1px solid rgba(0,200,255,0.06);
+}
+
+.admin-header .logo{ height:44px; filter: drop-shadow(0 0 8px rgba(0,200,255,0.08)); }
+.admin-header h1{ margin:0; font-size:20px; color:var(--muted); flex:1; }
+.admin-header nav a{ color:var(--muted); text-decoration:none; margin-left:14px; font-size:14px; opacity:0.9 }
+
+.admin-container{
+  display:flex;
+  gap:22px;
+  max-width:1400px;
+  margin:28px auto;
+  padding:0 18px;
+}
+
+/* SIDEBAR */
+.admin-sidebar{
+  width:220px;
+  background:linear-gradient(180deg, rgba(10,18,35,0.6), rgba(6,12,28,0.5));
+  border-radius:12px;
+  padding:14px;
+  border:1px solid rgba(255,255,255,0.03);
+  height:calc(100vh - 120px);
+  position:sticky;
+  top:20px;
+}
+.admin-sidebar ul{ list-style:none; padding:0; margin:0; }
+.admin-sidebar li{
+  padding:12px 10px;
+  margin-bottom:6px;
+  border-radius:8px;
+  cursor:pointer;
+  color:var(--muted);
+}
+.admin-sidebar li.sel, .admin-sidebar li:hover{
+  background: linear-gradient(90deg, rgba(0,234,255,0.06), rgba(0,180,212,0.03));
+  color: #e6faff;
+  box-shadow: 0 4px 18px rgba(0,234,255,0.03);
+}
+
+/* MAIN */
+.admin-main{
+  flex:1;
+  min-height:520px;
+  background: transparent;
+}
+
+/* PANELS */
+.panel{ display:none; }
+.panel.active{ display:block; animation:fadeIn .25s ease-in-out; }
+
+@keyframes fadeIn { from {opacity:0; transform: translateY(6px)} to {opacity:1; transform:none} }
+
+/* CARDS */
+
+.cards{ display:flex; gap:14px; margin-top:8px; flex-wrap:wrap; }
+.card{
+  background:var(--card);
+  border-radius:10px;
+  padding:18px;
+  min-width:160px;
+  flex:1;
+  border:1px solid rgba(255,255,255,0.03);
+}
+.card h3{ margin:0; color:var(--muted); font-size:13px }
+.card p{ margin:10px 0 0; font-size:20px; color:#fff; font-weight:700 }
+
+/* TOOLBAR */
+.toolbar{
+  display:flex;
+  gap:10px;
+  margin:12px 0 18px;
+  align-items:center;
+}
+.toolbar input, .toolbar select{
+  padding:10px 12px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.04);
+  background:var(--glass);
+  color:var(--muted);
+  outline:none;
+  min-width:180px;
+}
+.btn{
+  padding:9px 12px;
+  border-radius:8px;
+  background:linear-gradient(90deg,#0ea8ff,#00d0c0);
+  border:none;
+  cursor:pointer;
+  color:#041421;
+  font-weight:700;
+}
+.btn.danger{
+  background:linear-gradient(90deg, #ff7b8a, #ff5964);
+  color:white;
+}
+
+/* TABLE WRAP - listados */
+.table-wrap{
+  background: rgba(10,16,30,0.45);
+  border: 1px solid rgba(255,255,255,0.03);
+  padding:12px;
+  border-radius:10px;
+  max-height:56vh;
+  overflow:auto;
+}
+
+/* tabla simple */
+.table{
+  width:100%;
+  border-collapse:collapse;
+}
+.table thead th{
+  position:sticky;
+  top:0;
+  background:linear-gradient(90deg, rgba(6,12,28,0.95), rgba(10,18,35,0.95));
+  padding:10px;
+  text-align:left;
+  font-size:13px;
+  color:var(--muted);
+  border-bottom:1px solid rgba(255,255,255,0.03);
+}
+.table tbody td{
+  padding:10px;
+  border-bottom:1px solid rgba(255,255,255,0.03);
+  font-size:14px;
+  color:#dff2ff;
+}
+.table img { height:44px; border-radius:6px; }
+
+/* small helpers */
+.row-actions button{
+  margin-right:8px;
+  padding:6px 8px;
+  border-radius:6px;
+  border:none;
+  cursor:pointer;
+  font-size:13px;
+}
+.row-actions .edit{ background: rgba(255,255,255,0.06); color:var(--muted); }
+.row-actions .danger{ background: #ff5964; color:white; }
+.row-actions .primary{ background: #00eaff; color:#041421; }
+
+/* tools grid */
+.tool-grid{ display:flex; gap:12px; flex-wrap:wrap; }
+.tool{
+  background:var(--card);
+  padding:14px; border-radius:10px; flex:1; min-width:220px;
+  border:1px solid rgba(255,255,255,0.02);
+}

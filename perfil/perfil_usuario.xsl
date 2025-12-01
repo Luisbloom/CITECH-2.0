@@ -24,6 +24,11 @@
         <a href="../tienda/productos.xml">Tienda</a>
         <a href="../marketplace/marketplace.xml">Marketplace</a>
         <a class="active" href="perfil_usuario.xml">Perfil</a>
+
+        <!-- ENLACE PANEL ADMIN (SE MUESTRA SOLO SI EL JS LO ACTIVA) -->
+        <a id="admin-link" href="../admin/admin_panel.xml" style="display:none;">
+            Panel Admin
+        </a>
     </nav>
 </header>
 
@@ -40,6 +45,10 @@
             <li data-panel="saldo">Saldo</li>
             <li data-panel="carrito">Carrito</li>
             <li data-panel="movimientos">Movimientos</li>
+
+            <!-- NUEVO: Convertirse en Admin -->
+            <li data-panel="adminupgrade">Convertirse en Admin</li>
+
             <li data-panel="logout">Cerrar Sesión</li>
         </ul>
     </aside>
@@ -119,7 +128,9 @@
                 <label>Confirmar nueva contraseña</label>
                 <input type="password" id="pass-confirm"/>
 
-                <button type="button" id="btn-cambiar-pass" class="btn-primary">Actualizar Contraseña</button>
+                <button type="button" id="btn-cambiar-pass" class="btn-primary">
+                    Actualizar Contraseña
+                </button>
             </form>
         </div>
 
@@ -170,6 +181,13 @@
                 </thead>
                 <tbody id="tabla-mov-body"></tbody>
             </table>
+        </div>
+
+        <!-- PANEL CONVERTIRSE EN ADMIN -->
+        <div id="panel-adminupgrade" class="panel">
+            <h2>Convertirse en Administrador</h2>
+            <p>Con un perfil administrador tendrás acceso completo al panel de control CITECH.</p>
+            <button id="btn-hacer-admin" class="btn-primary">Convertirme en Admin</button>
         </div>
 
         <!-- PANEL LOGOUT -->

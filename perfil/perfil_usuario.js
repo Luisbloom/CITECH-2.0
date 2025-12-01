@@ -1,10 +1,16 @@
-// ======== CONSTANTES ========
+/* ===============================
+   CONSTANTES LOCALSTORAGE
+   =============================== */
+
 const LS_USERS = "CITECH_users_v1";
 const LS_CURRENT = "CITECH_currentUser_v1";
 const LS_CART = "CITECH_cart_v1";
 const LS_MOV = "CITECH_movements_v1";
 
-// ======== CARGA DE DATOS ========
+/* ===============================
+   CARGA DE DATOS
+   =============================== */
+
 let users = JSON.parse(localStorage.getItem(LS_USERS) || "[]");
 let currentUser = JSON.parse(localStorage.getItem(LS_CURRENT) || "null");
 let cart = JSON.parse(localStorage.getItem(LS_CART) || "[]");
@@ -15,11 +21,14 @@ if (!currentUser) {
   window.location.href = "../usuarios/login.xml";
 }
 
-// ======== DOM ELEMENTOS ========
+/* ===============================
+   DOM ELEMENTOS
+   =============================== */
+
 const paneles = document.querySelectorAll(".panel");
 const sidebarItems = document.querySelectorAll(".perfil-sidebar li");
 
-// INFORMACIÓN
+// Información
 const fotoPerfilPreview = document.querySelector("#foto-perfil-preview");
 const infoNombre = document.querySelector("#info-nombre");
 const infoUsuario = document.querySelector("#info-usuario");
@@ -31,7 +40,10 @@ const infoProvincia = document.querySelector("#info-provincia");
 const infoCP = document.querySelector("#info-cp");
 const infoNacimiento = document.querySelector("#info-nacimiento");
 
-// EDITAR PERFIL
+// Admin link
+const adminLink = document.querySelector("#admin-link");
+
+// Editar perfil
 const editNombre = document.querySelector("#edit-nombre");
 const editEmail = document.querySelector("#edit-email");
 const editTelefono = document.querySelector("#edit-telefono");
@@ -42,36 +54,40 @@ const editCP = document.querySelector("#edit-cp");
 const editNacimiento = document.querySelector("#edit-nacimiento");
 const btnGuardarEditar = document.querySelector("#btn-guardar-editar");
 
-// CONTRASEÑA
+// Contraseña
 const passActual = document.querySelector("#pass-actual");
 const passNueva = document.querySelector("#pass-nueva");
 const passConfirm = document.querySelector("#pass-confirm");
 const btnCambiarPass = document.querySelector("#btn-cambiar-pass");
 
-// FOTO
+// Foto
 const fotoInput = document.querySelector("#foto-input");
 const fotoActual = document.querySelector("#foto-actual");
 const btnGuardarFoto = document.querySelector("#btn-guardar-foto");
 
-// SALDO
+// Saldo
 const saldoEl = document.querySelector("#saldo-usuario");
 const recargaInput = document.querySelector("#cantidad-recarga");
 const btnRecargar = document.querySelector("#btn-recargar");
 
-// CARRITO
+// Carrito
 const carritoLista = document.querySelector("#carrito-lista");
 const carritoTotal = document.querySelector("#carrito-total");
 const btnComprar = document.querySelector("#btn-comprar");
 
-// MOVIMIENTOS
+// Movimientos
 const tablaMovBody = document.querySelector("#tabla-mov-body");
 
-// LOGOUT
+// Admin Upgrade
+const btnHacerAdmin = document.querySelector("#btn-hacer-admin");
+
+// Logout
 const btnLogout = document.querySelector("#btn-logout");
 
-// ===============================
-// PANEL SELECCIONADO
-// ===============================
+
+/* ===============================
+   PANEL SELECCIONADO
+   =============================== */
 
 sidebarItems.forEach(item => {
   item.addEventListener("click", () => {
@@ -84,9 +100,19 @@ sidebarItems.forEach(item => {
   });
 });
 
-// ===============================
-// CARGAR INFORMACION
-// ===============================
+
+/* ===============================
+   MOSTRAR LINK ADMIN
+   =============================== */
+
+if (currentUser.rol === "admin") {
+    adminLink.style.display = "inline-block";
+}
+
+
+/* ===============================
+   CARGAR INFORMACIÓN
+   =============================== */
 
 function cargarInfo() {
   fotoPerfilPreview.src = currentUser.foto || "../img/default_user.png";
@@ -101,9 +127,10 @@ function cargarInfo() {
   infoNacimiento.textContent = currentUser.nacimiento;
 }
 
-// ===============================
-// EDITAR PERFIL
-// ===============================
+
+/* ===============================
+   EDITAR PERFIL
+   =============================== */
 
 function cargarEditar() {
   editNombre.value = currentUser.nombre;
@@ -132,9 +159,10 @@ btnGuardarEditar.onclick = () => {
   alert("Datos actualizados correctamente.");
 };
 
-// ===============================
-// CAMBIAR CONTRASEÑA
-// ===============================
+
+/* ===============================
+   CAMBIAR CONTRASEÑA
+   =============================== */
 
 btnCambiarPass.onclick = () => {
   if (passActual.value !== currentUser.password)
@@ -153,9 +181,10 @@ btnCambiarPass.onclick = () => {
   alert("Contraseña actualizada.");
 };
 
-// ===============================
-// FOTO DE PERFIL
-// ===============================
+
+/* ===============================
+   FOTO DE PERFIL
+   =============================== */
 
 fotoInput.onchange = e => {
   const file = e.target.files[0];
@@ -175,9 +204,10 @@ btnGuardarFoto.onclick = () => {
   alert("Foto actualizada.");
 };
 
-// ===============================
-// SALDO
-// ===============================
+
+/* ===============================
+   SALDO
+   =============================== */
 
 function cargarSaldo() {
   saldoEl.textContent = currentUser.saldo.toFixed(2) + "€";
@@ -196,9 +226,10 @@ btnRecargar.onclick = () => {
   alert("Recarga realizada.");
 };
 
-// ===============================
-// CARRITO
-// ===============================
+
+/* ===============================
+   CARRITO
+   =============================== */
 
 function cargarCarrito() {
   carritoLista.innerHTML = "";
@@ -217,8 +248,12 @@ function cargarCarrito() {
     const box = document.createElement("div");
     box.className = "carrito-item";
 
+    const imgSrc = item.origen === "marketplace"
+        ? item.imagen
+        : "../tienda/img/" + item.imagen;
+
     box.innerHTML = `
-      <img src="../tienda/img/${item.imagen}">
+      <img src="${imgSrc}">
       <div class="info">
         <h4>${item.nombre}</h4>
         <p>${item.precio}€ x ${item.qty}</p>
@@ -250,9 +285,10 @@ btnComprar.onclick = () => {
   alert("Compra realizada con éxito.");
 };
 
-// ===============================
-// MOVIMIENTOS
-// ===============================
+
+/* ===============================
+   MOVIMIENTOS
+   =============================== */
 
 function cargarMovimientos() {
   tablaMovBody.innerHTML = "";
@@ -285,9 +321,31 @@ function movimientosPush(tipo, monto, desc) {
   localStorage.setItem(LS_MOV, JSON.stringify(movements));
 }
 
-// ===============================
-// GUARDAR USUARIO
-// ===============================
+
+/* ===============================
+   HACERSE ADMIN
+   =============================== */
+
+if (btnHacerAdmin) {
+    btnHacerAdmin.onclick = () => {
+        if (currentUser.rol === "admin") {
+            return alert("Ya eres administrador.");
+        }
+
+        if (!confirm("¿Seguro que quieres convertirte en administrador?")) return;
+
+        currentUser.rol = "admin";
+        guardarUsuario();
+
+        alert("Ahora eres administrador.");
+        location.reload();
+    };
+}
+
+
+/* ===============================
+   GUARDAR USUARIO
+   =============================== */
 
 function guardarUsuario() {
   const index = users.findIndex(u => u.id === currentUser.id);
@@ -297,18 +355,20 @@ function guardarUsuario() {
   localStorage.setItem(LS_CURRENT, JSON.stringify(currentUser));
 }
 
-// ===============================
-// LOGOUT
-// ===============================
+
+/* ===============================
+   LOGOUT
+   =============================== */
 
 btnLogout.onclick = () => {
   localStorage.removeItem(LS_CURRENT);
   window.location.href = "../index/index.xml";
 };
 
-// ===============================
-// INICIALIZACIÓN
-// ===============================
+
+/* ===============================
+   INICIALIZACIÓN
+   =============================== */
 
 cargarInfo();
 cargarEditar();
