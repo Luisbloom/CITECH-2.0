@@ -1,0 +1,230 @@
+/* =============================== */
+/*   GLOBAL STYLES & VARIABLES    */
+/* =============================== */
+
+:root {
+    /* Colors */
+    --bg-primary: #0b1124;
+    --bg-secondary: #111b33;
+    --accent: #00eaff;
+    --accent-soft: rgba(0, 234, 255, 0.3);
+    --txt-light: #e8f2ff;
+    --txt-soft: #b4c4e0;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --danger: #ff3b3b;
+
+    /* Spacing & Layout */
+    --radius: 14px;
+    --shadow: 0 0 25px rgba(0, 234, 255, 0.15);
+    --transition: 0.3s ease;
+    --header-height: 80px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg-primary);
+    color: var(--txt-light);
+    line-height: 1.6;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition);
+}
+
+ul {
+    list-style: none;
+}
+
+/* =============================== */
+/*             HEADER              */
+/* =============================== */
+
+header {
+    width: 100%;
+    height: var(--header-height);
+    padding: 0 50px;
+    background: rgba(10, 18, 40, 0.9);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    backdrop-filter: blur(12px);
+    z-index: 1000;
+    border-bottom: 1px solid var(--card-border);
+}
+
+header .logo {
+    height: 45px;
+    transition: var(--transition);
+}
+
+header .logo:hover {
+    transform: scale(1.05);
+}
+
+header nav ul {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+header nav ul li a {
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--txt-soft);
+    position: relative;
+}
+
+header nav ul li a:hover,
+header nav ul li a.active {
+    color: var(--accent);
+    text-shadow: 0 0 8px var(--accent-soft);
+}
+
+header nav ul li a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--accent);
+    box-shadow: 0 0 5px var(--accent);
+}
+
+/* =============================== */
+/*           COMPONENTS            */
+/* =============================== */
+
+/* Buttons */
+.btn-primary {
+    background: var(--accent);
+    color: #000;
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-block;
+    box-shadow: 0 0 15px rgba(0, 234, 255, 0.1);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px rgba(0, 234, 255, 0.4);
+    background: #4df2ff;
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    padding: 8px 18px;
+    border-radius: var(--radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-secondary:hover {
+    background: var(--accent-soft);
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: white;
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-danger:hover {
+    background: #ff6b6b;
+    box-shadow: 0 0 15px rgba(255, 59, 59, 0.4);
+}
+
+/* Inputs */
+input,
+select,
+textarea {
+    background: var(--bg-secondary);
+    border: 1px solid var(--card-border);
+    color: var(--txt-light);
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+    transition: var(--transition);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 10px var(--accent-soft);
+}
+
+/* Cards */
+.card {
+    background: var(--card-bg);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 20px;
+}
+
+/* Titles */
+h1,
+h2,
+h3 {
+    color: var(--txt-light);
+    font-weight: 700;
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #334;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}

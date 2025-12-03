@@ -2,12 +2,12 @@
    Gestión de perfil, carrito y movimientos (LocalStorage)
 */
 
-const LS_USERS   = "CITECH_users_v1";
+const LS_USERS = "CITECH_users_v1";
 const LS_CURRENT = "CITECH_currentUser_v1";
-const LS_CART    = "CITECH_cart_v1";
-const LS_MOV     = "CITECH_movements_v1";
-const LS_MARKET  = "CITECH_market_v1";
-const LS_STORE   = "CITECH_store_v1";
+const LS_CART = "CITECH_cart_v1";
+const LS_MOV = "CITECH_movements_v1";
+const LS_MARKET = "CITECH_market_v1";
+const LS_STORE = "CITECH_store_v1";
 
 let users = JSON.parse(localStorage.getItem(LS_USERS) || "[]");
 let currentUser = JSON.parse(localStorage.getItem(LS_CURRENT) || "null");
@@ -106,7 +106,7 @@ function guardarUsuario() {
 function pushMovimiento(tipo, monto, descripcion, origen = "tienda", producto = null, qty = null, precioUnitario = null, vendedor = null) {
   let movs = JSON.parse(localStorage.getItem(LS_MOV) || "[]");
   const mov = {
-    id: "mov_" + Date.now() + "_" + Math.floor(Math.random()*9999),
+    id: "mov_" + Date.now() + "_" + Math.floor(Math.random() * 9999),
     usuario: currentUser.id,
     usuarioNombre: currentUser.usuario,
     usuarioEmail: currentUser.email,
@@ -207,7 +207,7 @@ if (btnGuardarFoto) btnGuardarFoto.onclick = () => {
    Balance / Recharge
    --------------------------- */
 function cargarSaldo() {
-  saldoEl.textContent = ((currentUser.saldo||0)).toFixed(2) + "€";
+  saldoEl.textContent = ((currentUser.saldo || 0)).toFixed(2) + "€";
 }
 if (btnRecargar) {
   btnRecargar.onclick = () => {
@@ -233,7 +233,7 @@ function cargarCarrito() {
   cart.forEach(item => {
     total += item.precio * item.qty;
     const box = document.createElement("div"); box.className = "carrito-item";
-    const imgSrc = item.origen === "marketplace" ? item.imagen : "../tienda/img/" + item.imagen;
+    const imgSrc = item.origen === "marketplace" ? item.imagen : "../img/" + item.imagen;
     box.innerHTML = `<img src="${imgSrc}"><div class="info"><h4>${item.nombre}</h4><p>${item.precio}€ x ${item.qty}</p></div>`;
     carritoLista.appendChild(box);
   });
@@ -248,9 +248,9 @@ if (btnComprar) {
     cart = JSON.parse(localStorage.getItem(LS_CART) || "[]");
     if (!cart.length) return alert("Carrito vacío.");
     let total = cart.reduce((t, p) => t + p.precio * p.qty, 0);
-    if ((currentUser.saldo||0) < total) return alert("No tienes saldo suficiente.");
+    if ((currentUser.saldo || 0) < total) return alert("No tienes saldo suficiente.");
     // charge user
-    currentUser.saldo = (currentUser.saldo||0) - total;
+    currentUser.saldo = (currentUser.saldo || 0) - total;
     guardarUsuario(); cargarSaldo();
     // per-item processing
     cart.forEach(item => {
@@ -264,8 +264,8 @@ if (btnComprar) {
         let marketLocal = JSON.parse(localStorage.getItem(LS_MARKET) || "[]");
         let prod = marketLocal.find(p => p.id === item.id);
         if (prod) {
-          prod.stock = (prod.stock||0) - item.qty;
-          if (prod.stock <= 0) marketLocal = marketLocal.filter(p=>p.id!==prod.id);
+          prod.stock = (prod.stock || 0) - item.qty;
+          if (prod.stock <= 0) marketLocal = marketLocal.filter(p => p.id !== prod.id);
           localStorage.setItem(LS_MARKET, JSON.stringify(marketLocal));
         }
       } else {
@@ -273,8 +273,8 @@ if (btnComprar) {
         let storeLocal = JSON.parse(localStorage.getItem(LS_STORE) || "[]");
         let prodS = storeLocal.find(s => s.id === item.id);
         if (prodS) {
-          prodS.stock = (prodS.stock||0) - item.qty;
-          if (prodS.stock <= 0) storeLocal = storeLocal.filter(s=>s.id!==prodS.id);
+          prodS.stock = (prodS.stock || 0) - item.qty;
+          if (prodS.stock <= 0) storeLocal = storeLocal.filter(s => s.id !== prodS.id);
           localStorage.setItem(LS_STORE, JSON.stringify(storeLocal));
         }
       }
@@ -293,7 +293,7 @@ if (btnComprar) {
 function cargarMovimientos() {
   tablaMovBody.innerHTML = "";
   movements = JSON.parse(localStorage.getItem(LS_MOV) || "[]");
-  const movs = movements.filter(m => m.usuario === currentUser.id).sort((a,b)=> new Date(b.fecha)-new Date(a.fecha));
+  const movs = movements.filter(m => m.usuario === currentUser.id).sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
   movs.forEach(m => {
     const tr = document.createElement("tr");
     tr.innerHTML = `

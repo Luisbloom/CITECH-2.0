@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="contacto.xsl"?>
+
+<contacto>
+    <header>
+        <logo>../img/logo.png</logo>
+        <menu>
+            <item link="../index/index.xml#hero">Inicio</item>
+            <item link="../index/index.xml#servicios">Servicios</item>
+            <item link="../index/index.xml#quienes">Quiénes Somos</item>
+            <item link="../index/index.xml#equipo">Equipo</item>
+            <item link="../tienda/productos.xml">Tienda</item>
+            <item link="../marketplace/marketplace.xml">Marketplace</item>
+            <item link="#">Contacto</item>
+            <item link="../chatbot/chatbot.xml">Asistente IA</item>
+            <item link="../usuarios/login.xml">Iniciar Sesión</item>
+            <item link="../usuarios/registro.xml">Crear Cuenta</item>
+            <item link="../perfil/perfil_usuario.xml">Perfil</item>
+        </menu>
+    </header>
+
+    <info>
+        <titulo>Contáctanos</titulo>
+        <descripcion>Estamos aquí para ayudarte. Envíanos un mensaje o visítanos.</descripcion>
+        <datos>
+            <dato tipo="email">soporte@citech.com</dato>
+            <dato tipo="telefono">+34 912 345 678</dato>
+            <dato tipo="direccion">Calle Tecnología 123, Madrid, España</dato>
+        </datos>
+    </info>
+
+    <formulario>
+        <campo id="nombre" tipo="text" label="Nombre Completo" required="true"/>
+        <campo id="email" tipo="email" label="Correo Electrónico" required="true"/>
+        <campo id="asunto" tipo="text" label="Asunto" required="true"/>
+        <campo id="mensaje" tipo="textarea" label="Mensaje" required="true"/>
+    </formulario>
+</contacto>

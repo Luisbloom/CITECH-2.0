@@ -8,6 +8,7 @@
         <menu>
             <item link="#hero">Inicio</item>
             <item link="#servicios">Servicios</item>
+            <item link="#features">Características</item>
             <item link="#quienes">Quiénes Somos</item>
             <item link="#equipo">Equipo</item>
             <item link="../tienda/productos.xml">Tienda</item>
@@ -23,30 +24,70 @@
     <hero id="hero">
         <titulo>CITECH • Tecnología que Eleva tu Potencial</titulo>
         <subtitulo>
-            Hardware de alto rendimiento, IA integrada y soluciones profesionales
-            para gamers, creadores y empresas.
+            Hardware de alto rendimiento, soluciones con IA integrada y servicios profesionales
+            para gamers, creadores de contenido y empresas que buscan la excelencia.
         </subtitulo>
 
         <botones>
-            <boton tipo="primario" link="../tienda/productos.xml">Explorar Tienda</boton>
-            <boton tipo="secundario" link="#servicios">Servicios</boton>
+            <boton tipo="primario" link="../tienda/productos.xml">🛒 Explorar Tienda</boton>
+            <boton tipo="secundario" link="#servicios">📋 Ver Servicios</boton>
         </botones>
 
         <stats>
             <stat>
-                <numero>+500</numero>
-                <texto>Clientes satisfechos</texto>
+                <numero>500</numero>
+                <texto>Clientes Satisfechos</texto>
             </stat>
             <stat>
-                <numero>24/7</numero>
-                <texto>Soporte dedicado</texto>
+                <numero>24</numero>
+                <texto>Soporte 24/7</texto>
             </stat>
             <stat>
-                <numero>+120</numero>
-                <texto>Equipos premium montados</texto>
+                <numero>120</numero>
+                <texto>Equipos Premium</texto>
+            </stat>
+            <stat>
+                <numero>98</numero>
+                <texto>% Satisfacción</texto>
             </stat>
         </stats>
     </hero>
+
+    <features id="features">
+        <titulo>¿Por qué elegir CITECH?</titulo>
+        <lista>
+            <feature>
+                <icono>🚀</icono>
+                <titulo>Alto Rendimiento</titulo>
+                <descripcion>Componentes de última generación seleccionados para máximo desempeño</descripcion>
+            </feature>
+            <feature>
+                <icono>🤖</icono>
+                <titulo>IA Integrada</titulo>
+                <descripcion>Asistente inteligente para recomendaciones personalizadas y soporte</descripcion>
+            </feature>
+            <feature>
+                <icono>⚡</icono>
+                <titulo>Optimización Extrema</titulo>
+                <descripcion>Configuraciones ajustadas para extraer cada FPS y mejorar la estabilidad</descripcion>
+            </feature>
+            <feature>
+                <icono>🛡️</icono>
+                <titulo>Garantía Total</titulo>
+                <descripcion>Soporte técnico dedicado y garantía extendida en todos nuestros productos</descripcion>
+            </feature>
+            <feature>
+                <icono>💎</icono>
+                <titulo>Calidad Premium</titulo>
+                <descripcion>Solo trabajamos con marcas reconocidas y componentes probados</descripcion>
+            </feature>
+            <feature>
+                <icono>🎯</icono>
+                <titulo>Personalización</titulo>
+                <descripcion>Configuraciones a medida según tus necesidades y presupuesto</descripcion>
+            </feature>
+        </lista>
+    </features>
 
     <servicios id="servicios">
         <titulo>Nuestros Servicios</titulo>
@@ -56,24 +97,30 @@
                 <icono>🖥️</icono>
                 <titulo>Montaje Premium</titulo>
                 <descripcion>
-                    Ensamblaje profesional con optimización térmica y rendimiento extremo.
+                    Ensamblaje profesional con cable management impecable, 
+                    optimización térmica y testing exhaustivo.
                 </descripcion>
+                <precio>Desde 99€</precio>
             </servicio>
 
             <servicio>
                 <icono>⚡</icono>
                 <titulo>Optimización Avanzada</titulo>
                 <descripcion>
-                    Aumentamos FPS, estabilidad y eficiencia energética de tu setup.
+                    Aumentamos rendimiento, estabilidad y FPS mediante 
+                    overclock seguro y tweaking del sistema.
                 </descripcion>
+                <precio>Desde 49€</precio>
             </servicio>
 
             <servicio>
                 <icono>🔧</icono>
-                <titulo>Soporte Técnico</titulo>
+                <titulo>Soporte Técnico 24/7</titulo>
                 <descripcion>
-                    Diagnóstico experto, mantenimiento, upgrades y reparación.
+                    Diagnóstico experto, mantenimiento preventivo, 
+                    upgrades y reparación con piezas originales.
                 </descripcion>
+                <precio>Desde 29€</precio>
             </servicio>
 
         </tarjetas>
@@ -82,22 +129,25 @@
     <quienes_somos id="quienes">
         <titulo>¿Quiénes Somos?</titulo>
         <descripcion>
-            CITECH nace para combinar tecnología, innovación y rendimiento real.
-            Ofrecemos calidad, transparencia y soporte profesional para que cada usuario
-            obtenga la mejor experiencia tecnológica posible.
+            CITECH nace de la pasión por la tecnología y el compromiso con la excelencia.
+            Somos un equipo de expertos dedicados a ofrecer soluciones tecnológicas de alto rendimiento,
+            combinando innovación, calidad y un servicio personalizado que supera expectativas.
         </descripcion>
 
         <valores>
             <valor>
-                <nombre>✔ Excelencia</nombre>
-                <descripcion>Componentes probados y configuraciones estables.</descripcion>
+                <icono>✨</icono>
+                <nombre>Excelencia</nombre>
+                <descripcion>Componentes probados, configuraciones estables y resultados garantizados.</descripcion>
             </valor>
             <valor>
-                <nombre>✔ Confianza</nombre>
-                <descripcion>Atención personalizada y soporte de expertos.</descripcion>
+                <icono>🤝</icono>
+                <nombre>Confianza</nombre>
+                <descripcion>Atención personalizada, transparencia total y soporte de expertos.</descripcion>
             </valor>
             <valor>
-                <nombre>✔ Innovación</nombre>
+                <icono>💡</icono>
+                <nombre>Innovación</nombre>
                 <descripcion>
                     Integración de IA, sistemas personalizados y hardware de última generación.
                 </descripcion>
@@ -111,17 +161,60 @@
 
             <miembro>
                 <nombre>Luis Miguel Pablos</nombre>
-                <rol>Fundador / Desarrollador</rol>
+                <rol>Fundador / Desarrollador Full-Stack</rol>
                 <foto>../img/luis.png</foto>
+                <descripcion>Experto en desarrollo web y soluciones tecnológicas</descripcion>
             </miembro>
 
             <miembro>
                 <nombre>Mario Rodríguez</nombre>
-                <rol>Soporte Técnico</rol>
+                <rol>Especialista en Soporte Técnico</rol>
                 <foto>../img/mario.png</foto>
+                <descripcion>Hardware enthusiast con años de experiencia</descripcion>
             </miembro>
 
         </miembros>
     </equipo>
+
+    <cta id="cta">
+        <titulo>¿Listo para mejorar tu setup?</titulo>
+        <descripcion>
+            Explora nuestra tienda o contacta con nuestro equipo para una consulta personalizada
+        </descripcion>
+        <botones>
+            <boton tipo="primario" link="../tienda/productos.xml">Ver Tienda</boton>
+            <boton tipo="secundario" link="../contacto/contacto.xml">Contactar</boton>
+        </botones>
+    </cta>
+
+    <footer>
+        <columnas>
+            <columna>
+                <titulo>CITECH</titulo>
+                <enlaces>
+                    <enlace link="#hero">Inicio</enlace>
+                    <enlace link="#servicios">Servicios</enlace>
+                    <enlace link="#quienes">Sobre Nosotros</enlace>
+                </enlaces>
+            </columna>
+            <columna>
+                <titulo>Tienda</titulo>
+                <enlaces>
+                    <enlace link="../tienda/productos.xml">Productos</enlace>
+                    <enlace link="../marketplace/marketplace.xml">Marketplace</enlace>
+                    <enlace link="../perfil/perfil_usuario.xml">Mi Perfil</enlace>
+                </enlaces>
+            </columna>
+            <columna>
+                <titulo>Soporte</titulo>
+                <enlaces>
+                    <enlace link="../chatbot/chatbot.xml">Asistente IA</enlace>
+                    <enlace link="../contacto/contacto.xml">Contacto</enlace>
+                    <enlace link="#equipo">Equipo</enlace>
+                </enlaces>
+            </columna>
+        </columnas>
+        <copyright>© 2024 CITECH • Tecnología Premium</copyright>
+    </footer>
 
 </index>

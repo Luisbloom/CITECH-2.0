@@ -11,18 +11,20 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Marketplace - CITECH</title>
+    <link rel="stylesheet" href="../global.css"/>
     <link rel="stylesheet" href="marketplace.css"/>
 </head>
 
 <body>
 
-<header class="header">
-    <img src="../img/logo.png" class="logo"/>
+<header>
+    <img src="{header/logo}" class="logo"/>
     <nav>
-        <a href="../index/index.xml">Inicio</a>
-        <a href="../tienda/productos.xml">Tienda</a>
-        <a class="active" href="marketplace.xml">Marketplace</a>
-        <a href="../perfil/perfil_usuario.xml">Mi Perfil</a>
+        <ul>
+            <xsl:for-each select="header/menu/item">
+                <li><a href="{@link}"><xsl:value-of select="."/></a></li>
+            </xsl:for-each>
+        </ul>
     </nav>
 </header>
 

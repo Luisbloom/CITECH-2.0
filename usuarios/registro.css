@@ -1,21 +1,20 @@
 /* GENERAL */
 body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: linear-gradient(135deg, #0a1025, #0f1a3d);
-    color: white;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
     min-height: 100vh;
 }
 
-/* CONTENEDOR PRINCIPAL */
+/* MAIN CONTENT WRAPPER */
 .reg-container {
-    width: 100%;
-    max-width: 520px;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 20px;
+    max-width: 520px;
+    width: 100%;
+    margin: 0 auto;
 }
 
 /* TARJETA FORMULARIO */
@@ -26,6 +25,7 @@ body {
     box-shadow: 0 0 25px rgba(0, 210, 255, 0.15);
     border: 1px solid rgba(0, 255, 255, 0.12);
     backdrop-filter: blur(6px);
+    width: 100%;
 }
 
 /* TÍTULO */

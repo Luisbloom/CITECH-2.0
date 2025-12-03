@@ -1,152 +1,152 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
 <xsl:output method="html" indent="yes"/>
 
 <xsl:template match="/adminpanel">
+
 <html>
 <head>
-  <meta charset="UTF-8"/>
-  <title>Admin Panel - CITECH</title>
-  <link rel="stylesheet" href="admin_panel.css"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta charset="UTF-8"/>
+    <title>Admin Panel - CITECH</title>
+    <link rel="stylesheet" href="../global.css"/>
+    <link rel="stylesheet" href="admin_panel.css"/>
 </head>
+
 <body>
 
-<header class="admin-header">
-  <img src="../img/logo.png" class="logo" alt="CITECH"/>
-  <h1>Panel de Administración</h1>
-  <nav>
-    <a href="../index/index.xml">Inicio</a>
-    <a href="../perfil/perfil_usuario.xml">Perfil</a>
-  </nav>
+<header>
+    <img src="{header/logo}" class="logo"/>
+    <nav>
+        <ul>
+            <xsl:for-each select="header/menu/item">
+                <li><a href="{@link}"><xsl:value-of select="."/></a></li>
+            </xsl:for-each>
+        </ul>
+    </nav>
 </header>
 
-<main class="admin-container">
+<div class="admin-container">
+    <aside class="admin-sidebar">
+        <h2>Panel Admin</h2>
+        <button class="sidebar-btn active" data-panel="dashboard">📊 Dashboard</button>
+        <button class="sidebar-btn" data-panel="products">📦 Productos Tienda</button>
+        <button class="sidebar-btn" data-panel="marketplace">🛒 Marketplace</button>
+        <button class="sidebar-btn" data-panel="users">👥 Usuarios</button>
+        <button class="sidebar-btn" data-panel="movements">💳 Movimientos</button>
+        <button class="sidebar-btn logout" id="btn-logout">🚪 Salir</button>
+    </aside>
 
-  <!-- SIDEBAR -->
-  <aside class="admin-sidebar">
-    <ul>
-      <li class="sel" data-panel="dashboard">Dashboard</li>
-      <li data-panel="tienda">Tienda</li>
-      <li data-panel="marketplace">Marketplace</li>
-      <li data-panel="movimientos">Movimientos</li>
-      <li data-panel="herramientas">Herramientas</li>
-      <li data-panel="logout">Cerrar sesión</li>
-    </ul>
-  </aside>
+    <main class="admin-main">
+        <!-- Dashboard Panel -->
+        <section id="panel-dashboard" class="admin-panel active">
+            <h1>Dashboard</h1>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-info">
+                        <div class="stat-label">Usuarios Registrados</div>
+                        <div class="stat-value" id="stat-users">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-info">
+                        <div class="stat-label">Productos Tienda</div>
+                        <div class="stat-value" id="stat-products">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🛒</div>
+                    <div class="stat-info">
+                        <div class="stat-label">Productos Marketplace</div>
+                        <div class="stat-value" id="stat-marketplace">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💳</div>
+                    <div class="stat-info">
+                        <div class="stat-label">Total Movimientos</div>
+                        <div class="stat-value" id="stat-movements">0</div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-  <!-- MAIN -->
-  <section class="admin-main">
+        <!-- Products Panel -->
+        <section id="panel-products" class="admin-panel">
+            <h1>Gestión de Productos Tienda</h1>
+            <div class="panel-controls">
+                <input type="text" id="search-products" placeholder="Buscar productos..."/>
+                <select id="filter-category">
+                    <option value="">Todas las categorías</option>
+                </select>
+                <button class="btn-secondary" id="btn-reload-xml">🔄 Recargar desde XML</button>
+                <button class="btn-primary" id="btn-add-product">+ Añadir Producto</button>
+            </div>
+            <div id="products-table" class="table-container"></div>
+        </section>
 
-    <!-- DASHBOARD -->
-    <div id="panel-dashboard" class="panel active">
-      <h2>Dashboard</h2>
-      <div class="cards">
-        <div class="card"><h3>Usuarios</h3><p id="count-users-val">0</p></div>
-        <div class="card"><h3>Tienda</h3><p id="count-store-val">0</p></div>
-        <div class="card"><h3>Marketplace</h3><p id="count-market-val">0</p></div>
-        <div class="card"><h3>Movimientos</h3><p id="count-mov-val">0</p></div>
-      </div>
+        <!-- Marketplace Panel -->
+        <section id="panel-marketplace" class="admin-panel">
+            <h1>Gestión de Marketplace</h1>
+            <div id="marketplace-table" class="table-container"></div>
+        </section>
+
+        <!-- Users Panel -->
+        <section id="panel-users" class="admin-panel">
+            <h1>Gestión de Usuarios</h1>
+            <div id="users-table" class="table-container"></div>
+        </section>
+
+        <!-- Movements Panel -->
+        <section id="panel-movements" class="admin-panel">
+            <h1>Historial de Movimientos</h1>
+            <div class="panel-controls">
+                <input type="text" id="search-movements" placeholder="Buscar movimientos..."/>
+                <select id="filter-movement-type">
+                    <option value="">Todos los tipos</option>
+                    <option value="compra_tienda">Compra Tienda</option>
+                    <option value="compra_market">Compra Marketplace</option>
+                    <option value="recarga">Recarga</option>
+                </select>
+            </div>
+            <div id="movements-table" class="table-container"></div>
+        </section>
+    </main>
+</div>
+
+<!-- Product Modal -->
+<div id="product-modal" class="modal">
+    <div class="modal-content">
+        <h2 id="modal-title">Añadir Producto</h2>
+        <form id="product-form">
+            <label>Nombre <input type="text" id="product-name" required="required"/></label>
+            <label>Precio (€) <input type="number" id="product-price" step="0.01" min="0" required="required"/></label>
+            <label>Stock <input type="number" id="product-stock" min="0" required="required"/></label>
+            <label>Categoría 
+                <select id="product-category" required="required">
+                    <option value="componentes">Componentes</option>
+                    <option value="perifericos">Periféricos</option>
+                    <option value="otros">Otros</option>
+                </select>
+            </label>
+            <label>Descripción <textarea id="product-description"></textarea></label>
+            <label>Imagen <input type="file" id="product-image" accept="image/*"/></label>
+            <img id="image-preview" src="../img/default_product.png" alt="Preview"/>
+            <div class="modal-buttons">
+                <button type="submit" class="btn-primary">Guardar</button>
+                <button type="button" class="btn-secondary" id="btn-cancel-modal">Cancelar</button>
+            </div>
+        </form>
     </div>
-
-
-    <!-- TIENDA -->
-    <div id="panel-tienda" class="panel">
-      <h2>Gestión de la Tienda</h2>
-
-      <div class="toolbar">
-        <button id="btn-add-store" class="btn">Añadir producto</button>
-      </div>
-
-      <!-- MODAL PARA AÑADIR PRODUCTOS -->
-      <div id="store-form-modal" class="modal hidden">
-        <div class="modal-box">
-          <h3 id="store-form-title">Nuevo producto</h3>
-
-          <div class="form-grid">
-            
-            <label>Nombre del producto</label>
-            <input id="store-nombre" />
-
-            <label>Precio (€)</label>
-            <input id="store-precio" type="number" min="0" step="0.01"/>
-
-            <label>Stock disponible</label>
-            <input id="store-stock" type="number" min="0"/>
-
-            <label>Categoría</label>
-            <select id="store-categoria">
-              <option value="componentes">Componentes</option>
-              <option value="perifericos">Periféricos</option>
-              <option value="pcs">PCs</option>
-              <option value="consolas">Consolas</option>
-              <option value="otros">Otros</option>
-            </select>
-
-            <label>Descripción</label>
-            <textarea id="store-desc"></textarea>
-
-            <label>Imagen</label>
-            <input id="store-img" type="file" accept="image/*"/>
-
-          </div>
-
-          <img id="store-img-preview" class="preview-img" src="../img/default_product.png"/>
-
-          <div class="modal-buttons">
-            <button id="store-save" class="btn">Guardar</button>
-            <button id="store-cancel" class="btn danger">Cancelar</button>
-          </div>
-        </div>
-      </div>
-
-      <div id="store-list" class="table-wrap"></div>
-    </div>
-
-
-    <!-- MARKETPLACE -->
-    <div id="panel-marketplace" class="panel">
-      <h2>Marketplace</h2>
-      <div id="market-list" class="table-wrap"></div>
-    </div>
-
-
-    <!-- MOVIMIENTOS -->
-    <div id="panel-movimientos" class="panel">
-      <h2>Movimientos</h2>
-      <input id="mov-search" class="toolbar" placeholder="Buscar movimientos..."/>
-      <div id="mov-list" class="table-wrap"></div>
-    </div>
-
-
-    <!-- HERRAMIENTAS -->
-    <div id="panel-herramientas" class="panel">
-      <h2>Herramientas</h2>
-      <div class="tool-grid">
-        <div class="tool">
-          <h4>Vaciar marketplace</h4>
-          <button id="btn-clear-market" class="btn danger">Vaciar</button>
-        </div>
-
-        <div class="tool">
-          <h4>Recalcular</h4>
-          <button id="btn-recalc" class="btn">Recalcular</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- LOGOUT -->
-    <div id="panel-logout" class="panel">
-      <h2>Cerrar sesión</h2>
-      <button id="btn-admin-logout" class="btn danger">Cerrar sesión</button>
-    </div>
-
-  </section>
-
-</main>
+</div>
 
 <script src="admin_panel.js"></script>
+
 </body>
 </html>
+
 </xsl:template>
+
 </xsl:stylesheet>

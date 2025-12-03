@@ -1,352 +1,389 @@
-document.addEventListener("DOMContentLoaded", () => {
+// Admin Panel JavaScript
+document.addEventListener('DOMContentLoaded', () => {
+    // LocalStorage keys
+    const LS_CURRENT = 'CITECH_currentUser_v1';
+    const LS_USERS = 'CITECH_users_v1';
+    const LS_STORE = 'CITECH_store_v1';
+    const LS_MARKET = 'CITECH_market_v1';
+    const LS_MOV = 'CITECH_movements_v1';
 
-    /* ============================
-       CONSTANTES LOCALSTORAGE
-    ============================ */
-    const LS_USERS   = "CITECH_users_v1";
-    const LS_STORE   = "CITECH_store_v1";
-    const LS_MARKET  = "CITECH_market_v1";
-    const LS_MOV     = "CITECH_movements_v1";
-    const LS_CURRENT = "CITECH_currentUser_v1";
-
-    let users   = JSON.parse(localStorage.getItem(LS_USERS)   || "[]");
-    let store   = JSON.parse(localStorage.getItem(LS_STORE)   || "[]");
-    let market  = JSON.parse(localStorage.getItem(LS_MARKET)  || "[]");
-    let movs    = JSON.parse(localStorage.getItem(LS_MOV)     || "[]");
-    let current = JSON.parse(localStorage.getItem(LS_CURRENT) || "null");
-
-    if (!current || current.rol !== "admin") {
-        alert("No tienes permisos para acceder al panel administrador.");
-        window.location.href = "../index/index.xml";
+    // Check admin access
+    const currentUser = JSON.parse(localStorage.getItem(LS_CURRENT) || 'null');
+    if (!currentUser || currentUser.rol !== 'admin') {
+        alert('Acceso denegado. Solo administradores.');
+        window.location.href = '../index/index.xml';
         return;
     }
 
-    /* ============================
-       CAMBIO DE PANELES
-    ============================ */
-    const sidebar = document.querySelectorAll(".admin-sidebar li");
-    const panels  = document.querySelectorAll(".panel");
+    // Load products from XML
+    async function loadProductsFromXML() {
+        try {
+            const response = await fetch('../tienda/productos.xml');
+            const xmlText = await response.text();
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
 
-    sidebar.forEach(item => {
-        item.addEventListener("click", () => {
-            sidebar.forEach(i => i.classList.remove("sel"));
-            item.classList.add("sel");
+            const productNodes = xmlDoc.querySelectorAll('producto');
+            const xmlProducts = [];
 
-            const target = item.dataset.panel;
+            productNodes.forEach(node => {
+                const product = {
+                    id: node.querySelector('id')?.textContent || 'prod_' + Date.now() + Math.random(),
+                    nombre: node.querySelector('nombre')?.textContent || '',
+                    descripcion: node.querySelector('descripcion')?.textContent?.trim() || '',
+                    precio: parseFloat(node.querySelector('precio')?.textContent || '0'),
+                    imagen: node.querySelector('imagen')?.textContent || 'default_product.png',
+                    categoria: node.querySelector('categoria')?.textContent || 'Otros',
+                    stock: parseInt(node.querySelector('stock')?.textContent || '0')
+                };
+                xmlProducts.push(product);
+            });
 
-            panels.forEach(p => p.classList.remove("active"));
-            document.getElementById("panel-" + target).classList.add("active");
+            return xmlProducts;
+        } catch (error) {
+            console.error('Error loading XML:', error);
+            alert('Error al cargar productos desde XML');
+            return [];
+        }
+    }
 
-            // refrescar listas por panel
-            if (target === "tienda") loadStore();
-            if (target === "marketplace") loadMarket();
-            if (target === "movimientos") loadMovimientos();
+    // Merge XML products with localStorage (localStorage takes precedence)
+    async function syncProductsWithXML() {
+        const xmlProducts = await loadProductsFromXML();
+        const storedProducts = JSON.parse(localStorage.getItem(LS_STORE) || '[]');
+
+        // Create a map of stored products by ID for quick lookup
+        const storedMap = new Map(storedProducts.map(p => [p.id.toString(), p]));
+
+        // Merge: use stored version if exists, otherwise use XML version
+        const mergedProducts = xmlProducts.map(xmlProd => {
+            const stored = storedMap.get(xmlProd.id.toString());
+            return stored || xmlProd;
+        });
+
+        // Add any stored products that aren't in XML (user-added products)
+        storedProducts.forEach(stored => {
+            if (!xmlProducts.find(xml => xml.id.toString() === stored.id.toString())) {
+                mergedProducts.push(stored);
+            }
+        });
+
+        localStorage.setItem(LS_STORE, JSON.stringify(mergedProducts));
+        return mergedProducts;
+    }
+
+    // Panel navigation
+    const panelBtns = document.querySelectorAll('.sidebar-btn:not(.logout)');
+    const panels = document.querySelectorAll('.admin-panel');
+
+    panelBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const panelId = btn.dataset.panel;
+
+            // Update buttons
+            panelBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Update panels
+            panels.forEach(p => p.classList.remove('active'));
+            document.getElementById(`panel-${panelId}`).classList.add('active');
         });
     });
 
-    /* ============================
-       DASHBOARD
-    ============================ */
-    function refreshDashboard() {
-        users  = JSON.parse(localStorage.getItem(LS_USERS)  || "[]");
-        store  = JSON.parse(localStorage.getItem(LS_STORE)  || "[]");
-        market = JSON.parse(localStorage.getItem(LS_MARKET) || "[]");
-        movs   = JSON.parse(localStorage.getItem(LS_MOV)    || "[]");
+    // Logout
+    document.getElementById('btn-logout').addEventListener('click', () => {
+        if (confirm('¿Cerrar sesión?')) {
+            localStorage.removeItem(LS_CURRENT);
+            window.location.href = '../index/index.xml';
+        }
+    });
 
-        document.getElementById("count-users-val").textContent  = users.length;
-        document.getElementById("count-store-val").textContent  = store.length;
-        document.getElementById("count-market-val").textContent = market.length;
-        document.getElementById("count-mov-val").textContent    = movs.length;
+    // Load data
+    function loadDashboard() {
+        const users = JSON.parse(localStorage.getItem(LS_USERS) || '[]');
+        const store = JSON.parse(localStorage.getItem(LS_STORE) || '[]');
+        const market = JSON.parse(localStorage.getItem(LS_MARKET) || '[]');
+        const movements = JSON.parse(localStorage.getItem(LS_MOV) || '[]');
+
+        document.getElementById('stat-users').textContent = users.length;
+        document.getElementById('stat-products').textContent = store.length;
+        document.getElementById('stat-marketplace').textContent = market.length;
+        document.getElementById('stat-movements').textContent = movements.length;
     }
 
-    refreshDashboard();
+    // Products management
+    let editingProductId = null;
+    const productModal = document.getElementById('product-modal');
+    const productForm = document.getElementById('product-form');
+    const imageInput = document.getElementById('product-image');
+    const imagePreview = document.getElementById('image-preview');
 
-    /* ============================
-       TIENDA — LISTA
-    ============================ */
-    const storeList = document.getElementById("store-list");
+    async function loadProducts() {
+        // Sync with XML on first load if localStorage is empty
+        const stored = JSON.parse(localStorage.getItem(LS_STORE) || '[]');
+        if (stored.length === 0) {
+            await syncProductsWithXML();
+        }
 
-    function loadStore() {
-        store = JSON.parse(localStorage.getItem(LS_STORE) || "[]");
+        const products = JSON.parse(localStorage.getItem(LS_STORE) || '[]');
+        const container = document.getElementById('products-table');
 
-        if (!store.length) {
-            storeList.innerHTML = "<p>No hay productos en tienda.</p>";
+        if (products.length === 0) {
+            container.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--txt-soft);">No hay productos en la tienda</p>';
             return;
         }
 
-        let html = `
-            <table class="tbl">
+        let html = `<table>
+            <thead>
                 <tr>
-                    <th>Producto</th>
+                    <th>Nombre</th>
                     <th>Precio</th>
                     <th>Stock</th>
                     <th>Categoría</th>
                     <th>Acciones</th>
                 </tr>
-        `;
+            </thead>
+            <tbody>`;
 
-        store.forEach(p => {
-            html += `
-                <tr>
-                    <td>${p.nombre}</td>
-                    <td>${p.precio}€</td>
-                    <td>${p.stock}</td>
-                    <td>${p.categoria}</td>
-                    <td>
-                      <button class="btn small" data-id="${p.id}" data-action="edit-store">Editar</button>
-                      <button class="btn small danger" data-id="${p.id}" data-action="del-store">Eliminar</button>
-                    </td>
-                </tr>
-            `;
+        products.forEach(product => {
+            html += `<tr>
+                <td>${product.nombre}</td>
+                <td>${product.precio.toFixed(2)}€</td>
+                <td>${product.stock}</td>
+                <td>${product.categoria}</td>
+                <td>
+                    <button class="btn-secondary" onclick="editProduct('${product.id}')">Editar</button>
+                    <button class="btn-danger" onclick="deleteProduct('${product.id}')">Eliminar</button>
+                </td>
+            </tr>`;
         });
 
-        html += "</table>";
-        storeList.innerHTML = html;
+        html += '</tbody></table>';
+        container.innerHTML = html;
+
+        // Populate category filter
+        const categories = [...new Set(products.map(p => p.categoria))];
+        const filterSelect = document.getElementById('filter-category');
+        filterSelect.innerHTML = '<option value="">Todas las categorías</option>';
+        categories.forEach(cat => {
+            filterSelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+        });
     }
 
-    /* ============================
-       TIENDA — MODAL FORM
-    ============================ */
-    const modal       = document.getElementById("store-form-modal");
-    const btnAddStore = document.getElementById("btn-add-store");
-    const btnSave     = document.getElementById("store-save");
-    const btnCancel   = document.getElementById("store-cancel");
+    // Add product button
+    document.getElementById('btn-add-product').addEventListener('click', () => {
+        editingProductId = null;
+        productForm.reset();
+        imagePreview.src = '../img/default_product.png';
+        document.getElementById('modal-title').textContent = 'Añadir Producto';
+        productModal.classList.add('active');
+    });
 
-    const fNombre   = document.getElementById("store-nombre");
-    const fPrecio   = document.getElementById("store-precio");
-    const fStock    = document.getElementById("store-stock");
-    const fCat      = document.getElementById("store-categoria");
-    const fDesc     = document.getElementById("store-desc");
-    const fImg      = document.getElementById("store-img");
-    const fPreview  = document.getElementById("store-img-preview");
-    const formTitle = document.getElementById("store-form-title");
-
-    let editingID = null;
-
-    btnAddStore.onclick = () => {
-        editingID = null;
-        formTitle.textContent = "Nuevo producto";
-        fNombre.value = "";
-        fPrecio.value = "";
-        fStock.value  = "";
-        fCat.value    = "componentes";
-        fDesc.value   = "";
-        fPreview.src  = "../img/default_product.png";
-        modal.classList.remove("hidden");
-    };
-
-    btnCancel.onclick = () => modal.classList.add("hidden");
-
-    /* Imagen preview */
-    fImg.onchange = e => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.onload = () => fPreview.src = reader.result;
-        reader.readAsDataURL(file);
-    };
-
-    /* Guardar producto */
-    btnSave.onclick = () => {
-        let img = fPreview.src;
-
-        if (!fNombre.value || !fPrecio.value || !fStock.value) {
-            alert("Rellena todos los campos obligatorios.");
-            return;
-        }
-
-        store = JSON.parse(localStorage.getItem(LS_STORE) || "[]");
-
-        if (editingID) {
-            /* EDITAR PRODUCTO */
-            let prod = store.find(p => p.id === editingID);
-            prod.nombre    = fNombre.value;
-            prod.precio    = Number(fPrecio.value);
-            prod.stock     = Number(fStock.value);
-            prod.categoria = fCat.value;
-            prod.descripcion = fDesc.value;
-            prod.imagen    = img;
-        } else {
-            /* NUEVO PRODUCTO */
-            store.push({
-                id: "store_" + Date.now(),
-                nombre: fNombre.value,
-                precio: Number(fPrecio.value),
-                stock: Number(fStock.value),
-                categoria: fCat.value,
-                descripcion: fDesc.value,
-                imagen: img
-            });
-        }
-
-        localStorage.setItem(LS_STORE, JSON.stringify(store));
-        loadStore();
-        refreshDashboard();
-        modal.classList.add("hidden");
-    };
-
-    /* ============================
-       TIENDA — ACCIONES
-    ============================ */
-    document.addEventListener("click", e => {
-        if (!e.target.matches("[data-action]")) return;
-
-        const id = e.target.dataset.id;
-        const action = e.target.dataset.action;
-
-        /* ELIMINAR PRODUCTO */
-        if (action === "del-store") {
-            if (!confirm("¿Eliminar este producto?")) return;
-            store = store.filter(p => p.id !== id);
-            localStorage.setItem(LS_STORE, JSON.stringify(store));
-            loadStore();
-            refreshDashboard();
-        }
-
-        /* EDITAR PRODUCTO */
-        if (action === "edit-store") {
-            const prod = store.find(p => p.id === id);
-            if (!prod) return;
-
-            editingID = id;
-            formTitle.textContent = "Editar producto";
-
-            fNombre.value = prod.nombre;
-            fPrecio.value = prod.precio;
-            fStock.value  = prod.stock;
-            fCat.value    = prod.categoria;
-            fDesc.value   = prod.descripcion;
-            fPreview.src  = prod.imagen;
-
-            modal.classList.remove("hidden");
+    // Reload from XML button
+    document.getElementById('btn-reload-xml').addEventListener('click', async () => {
+        if (confirm('¿Recargar productos desde XML? Los productos editados mantendrán sus cambios.')) {
+            await syncProductsWithXML();
+            await loadProducts();
+            loadDashboard();
+            alert('Productos sincronizados desde XML');
         }
     });
 
-    /* ============================
-       MARKETPLACE
-    ============================ */
-    function loadMarket() {
-        market = JSON.parse(localStorage.getItem(LS_MARKET) || "[]");
-        users  = JSON.parse(localStorage.getItem(LS_USERS) || "[]");
+    // Cancel modal
+    document.getElementById('btn-cancel-modal').addEventListener('click', () => {
+        productModal.classList.remove('active');
+    });
 
-        const cont = document.getElementById("market-list");
+    // Image preview
+    imageInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => imagePreview.src = e.target.result;
+            reader.readAsDataURL(file);
+        }
+    });
 
-        if (!market.length) {
-            cont.innerHTML = "<p>No hay anuncios en marketplace.</p>";
+    // Save product
+    productForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const products = JSON.parse(localStorage.getItem(LS_STORE) || '[]');
+        const productData = {
+            id: editingProductId || 'prod_' + Date.now(),
+            nombre: document.getElementById('product-name').value,
+            precio: parseFloat(document.getElementById('product-price').value),
+            stock: parseInt(document.getElementById('product-stock').value),
+            categoria: document.getElementById('product-category').value,
+            descripcion: document.getElementById('product-description').value,
+            imagen: imagePreview.src
+        };
+
+        if (editingProductId) {
+            const index = products.findIndex(p => p.id === editingProductId);
+            products[index] = productData;
+        } else {
+            products.push(productData);
+        }
+
+        localStorage.setItem(LS_STORE, JSON.stringify(products));
+        productModal.classList.remove('active');
+        loadProducts();
+        loadDashboard();
+    });
+
+    // Global functions for product actions
+    window.editProduct = (id) => {
+        const products = JSON.parse(localStorage.getItem(LS_STORE) || '[]');
+        const product = products.find(p => p.id === id);
+
+        if (product) {
+            editingProductId = id;
+            document.getElementById('product-name').value = product.nombre;
+            document.getElementById('product-price').value = product.precio;
+            document.getElementById('product-stock').value = product.stock;
+            document.getElementById('product-category').value = product.categoria;
+            document.getElementById('product-description').value = product.descripcion || '';
+            imagePreview.src = product.imagen;
+            document.getElementById('modal-title').textContent = 'Editar Producto';
+            productModal.classList.add('active');
+        }
+    };
+
+    window.deleteProduct = (id) => {
+        if (confirm('¿Eliminar este producto?')) {
+            let products = JSON.parse(localStorage.getItem(LS_STORE) || '[]');
+            products = products.filter(p => p.id !== id);
+            localStorage.setItem(LS_STORE, JSON.stringify(products));
+            loadProducts();
+            loadDashboard();
+        }
+    };
+
+    // Load marketplace
+    function loadMarketplace() {
+        const market = JSON.parse(localStorage.getItem(LS_MARKET) || '[]');
+        const users = JSON.parse(localStorage.getItem(LS_USERS) || '[]');
+        const container = document.getElementById('marketplace-table');
+
+        if (market.length === 0) {
+            container.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--txt-soft);">No hay productos en marketplace</p>';
             return;
         }
 
-        let html = `
-        <table class="tbl">
-          <tr>
-            <th>Producto</th>
-            <th>Precio</th>
-            <th>Categoría</th>
-            <th>Stock</th>
-            <th>Vendedor</th>
-          </tr>
-        `;
-
-        market.forEach(p => {
-            const v = users.find(u => u.id === p.vendedor);
-            html += `
+        let html = `<table>
+            <thead>
                 <tr>
-                    <td>${p.nombre}</td>
-                    <td>${p.precio}€</td>
-                    <td>${p.categoria}</td>
-                    <td>${p.stock}</td>
-                    <td>${v ? v.usuario : "?"}</td>
+                    <th>Producto</th>
+                    <th>Vendedor</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Categoría</th>
+                    <th>Fecha</th>
                 </tr>
-            `;
+            </thead>
+            <tbody>`;
+
+        market.forEach(item => {
+            const seller = users.find(u => u.id === item.vendedor);
+            const sellerName = seller ? seller.usuario : 'Desconocido';
+            const date = new Date(item.fecha).toLocaleDateString();
+
+            html += `<tr>
+                <td>${item.nombre}</td>
+                <td>${sellerName}</td>
+                <td>${item.precio.toFixed(2)}€</td>
+                <td>${item.stock}</td>
+                <td>${item.categoria}</td>
+                <td>${date}</td>
+            </tr>`;
         });
 
-        html += "</table>";
-        cont.innerHTML = html;
+        html += '</tbody></table>';
+        container.innerHTML = html;
     }
 
-    /* ============================
-       MOVIMIENTOS
-    ============================ */
-    const movList = document.getElementById("mov-list");
-    const movSearch = document.getElementById("mov-search");
+    // Load users
+    function loadUsers() {
+        const users = JSON.parse(localStorage.getItem(LS_USERS) || '[]');
+        const container = document.getElementById('users-table');
 
-    function loadMovimientos() {
-        movs = JSON.parse(localStorage.getItem(LS_MOV) || "[]");
-        users = JSON.parse(localStorage.getItem(LS_USERS) || "[]");
-
-        let q = movSearch.value.toLowerCase();
-        let lista = movs.filter(m => {
-            const user = users.find(u => u.id === m.usuario) || {};
-            return (
-                (user.usuario || "").toLowerCase().includes(q) ||
-                (m.descripcion || "").toLowerCase().includes(q)
-            );
-        });
-
-        if (!lista.length) {
-            movList.innerHTML = "<p>No hay movimientos registrados.</p>";
+        if (users.length === 0) {
+            container.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--txt-soft);">No hay usuarios registrados</p>';
             return;
         }
 
-        let html = `
-        <table class="tbl">
-            <tr>
-              <th>Fecha</th>
-              <th>Usuario</th>
-              <th>Tipo</th>
-              <th>Monto</th>
-              <th>Descripción</th>
-            </tr>
-        `;
-
-        lista.forEach(m => {
-            const user = users.find(u => u.id === m.usuario);
-            html += `
+        let html = `<table>
+            <thead>
                 <tr>
-                    <td>${new Date(m.fecha).toLocaleString()}</td>
-                    <td>${user ? user.usuario : "?"}</td>
-                    <td>${m.tipo}</td>
-                    <td>${m.monto}€</td>
-                    <td>${m.descripcion}</td>
+                    <th>Usuario</th>
+                    <th>Email</th>
+                    <th>Nombre</th>
+                    <th>Rol</th>
+                    <th>Saldo</th>
                 </tr>
-            `;
+            </thead>
+            <tbody>`;
+
+        users.forEach(user => {
+            html += `<tr>
+                <td>${user.usuario}</td>
+                <td>${user.email}</td>
+                <td>${user.nombre || '-'}</td>
+                <td>${user.rol || 'user'}</td>
+                <td>${(user.saldo || 0).toFixed(2)}€</td>
+            </tr>`;
         });
 
-        html += "</table>";
-        movList.innerHTML = html;
+        html += '</tbody></table>';
+        container.innerHTML = html;
     }
 
-    movSearch.oninput = loadMovimientos;
+    // Load movements
+    function loadMovements() {
+        const movements = JSON.parse(localStorage.getItem(LS_MOV) || '[]');
+        const container = document.getElementById('movements-table');
 
-    /* ============================
-       HERRAMIENTAS
-    ============================ */
-    document.getElementById("btn-clear-market").onclick = () => {
-        if (!confirm("¿Vaciar marketplace?")) return;
-        localStorage.setItem(LS_MARKET, "[]");
-        loadMarket();
-        refreshDashboard();
-    };
+        if (movements.length === 0) {
+            container.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--txt-soft);">No hay movimientos registrados</p>';
+            return;
+        }
 
-    document.getElementById("btn-recalc").onclick = () => {
-        refreshDashboard();
-        loadStore();
-        loadMarket();
-        loadMovimientos();
-        alert("Datos actualizados.");
-    };
+        let html = `<table>
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Usuario</th>
+                    <th>Tipo</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Monto</th>
+                </tr>
+            </thead>
+            <tbody>`;
 
-    /* ============================
-       LOGOUT
-    ============================ */
-    document.getElementById("btn-admin-logout").onclick = () => {
-        localStorage.removeItem(LS_CURRENT);
-        window.location.href = "../index/index.xml";
-    };
+        movements.sort((a, b) => new Date(b.fecha) - new Date(a.fecha)).forEach(mov => {
+            const date = new Date(mov.fecha).toLocaleString();
+            html += `<tr>
+                <td>${date}</td>
+                <td>${mov.usuarioNombre || mov.usuario}</td>
+                <td>${mov.tipo}</td>
+                <td>${mov.producto || '-'}</td>
+                <td>${mov.qty || '-'}</td>
+                <td>${mov.monto.toFixed(2)}€</td>
+            </tr>`;
+        });
 
-    /* ============================
-       INICIALIZACIÓN
-    ============================ */
-    loadStore();
-    loadMarket();
-    loadMovimientos();
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+
+    // Initialize
+    (async () => {
+        await loadProducts();
+        loadDashboard();
+        loadMarketplace();
+        loadUsers();
+        loadMovements();
+    })();
 });

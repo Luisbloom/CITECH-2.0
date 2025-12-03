@@ -9,51 +9,38 @@
     <head>
       <meta charset="utf-8"/>
       <title>Tienda CITECH</title>
+      <link rel="stylesheet" href="../global.css"/>
       <link rel="stylesheet" href="tienda.css"/>
       <meta name="viewport" content="width=device-width,initial-scale=1"/>
     </head>
 
     <body>
-      <header class="site-header">
-        <div class="brand">
-          <img src="../img/logo.png" class="logo" alt="CITECH"/>
-        </div>
 
-        <nav class="main-nav">
-          <a href="../index/index.xml">Inicio</a>
-          <a class="active" href="productos.xml">Tienda</a>
-          <a href="../perfil/perfil_usuario.xml">Perfil</a>
-          <a href="../marketplace/marketplace.xml">Marketplace</a>
+      <header>
+        <img src="{header/logo}" class="logo"/>
+        <nav>
+            <ul>
+                <xsl:for-each select="header/menu/item">
+                    <li><a href="{@link}"><xsl:value-of select="."/></a></li>
+                </xsl:for-each>
+            </ul>
         </nav>
-
-        <div class="header-actions">
-          <button id="btn-login">Iniciar sesión</button>
-        </div>
       </header>
 
       <main class="shop-main">
 
-        <!-- HERO -->
         <section class="hero-shop">
-          <div class="hero-left">
-            <h1>Tienda CITECH</h1>
-            <p>Productos tecnológicos de alta calidad, al estilo PCComponentes.</p>
-
-            <div class="controls">
-              <input type="search" id="search" placeholder="Buscar producto..." />
-              <select id="filter-category">
-                <option value="">Todas las categorías</option>
-              </select>
-            </div>
+          <h1>Tienda CITECH</h1>
+          <div class="controls">
+            <input id="search" placeholder="Buscar..."/>
+            <select id="filter-category"><option value="">Todas</option></select>
           </div>
         </section>
 
-        <!-- GRID -->
         <section class="catalog">
           <div id="grid-products" class="grid"></div>
         </section>
 
-        <!-- PRODUCTO MODAL -->
         <div id="product-modal" class="modal">
           <div class="modal-content">
             <button class="modal-close">✕</button>
@@ -63,20 +50,20 @@
 
       </main>
 
-      <!-- Productos convertidos a JSON -->
+      <!-- Datos del XML -->
       <script>
-        window.CITECH_PRODUCTS = [
-          <xsl:for-each select="producto">
-            {
-              "id": "<xsl:value-of select='id'/>",
-              "nombre": "<xsl:value-of select='nombre'/>",
-              "descripcion": "<xsl:value-of select='normalize-space(descripcion)'/>",
-              "precio": <xsl:value-of select='precio'/>,
-              "imagen": "<xsl:value-of select='imagen'/>",
-              "categoria": "<xsl:value-of select='categoria'/>"
-            }<xsl:if test="position() != last()">,</xsl:if>
-          </xsl:for-each>
-        ];
+      window.XML_PRODUCTS = [
+        <xsl:for-each select="producto">
+          {
+            "id": "<xsl:value-of select='id'/>",
+            "nombre": "<xsl:value-of select='nombre'/>",
+            "descripcion": "<xsl:value-of select='normalize-space(descripcion)'/>",
+            "precio": <xsl:value-of select='precio'/>,
+            "imagen": "<xsl:value-of select='imagen'/>",
+            "categoria": "<xsl:value-of select='categoria'/>"
+          }<xsl:if test="position()!=last()">,</xsl:if>
+        </xsl:for-each>
+      ];
       </script>
 
       <script src="tienda.js"></script>

@@ -12,21 +12,21 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Perfil - CITECH</title>
+    <link rel="stylesheet" href="../global.css"/>
     <link rel="stylesheet" href="perfil_usuario.css"/>
 </head>
 
 <body>
 
-<header class="perfil-header">
-    <img src="../img/logo.png" class="logo"/>
+<header>
+    <img src="{header/logo}" class="logo"/>
     <nav>
-        <a href="../index/index.xml">Inicio</a>
-        <a href="../tienda/productos.xml">Tienda</a>
-        <a href="../marketplace/marketplace.xml">Marketplace</a>
-        <a class="active" href="perfil_usuario.xml">Perfil</a>
-
-        <!-- ENLACE PANEL ADMIN (SE MUESTRA SOLO SI EL JS LO ACTIVA) -->
-        <a id="admin-link" href="../admin/admin_panel.xml" style="display:none;">
+        <ul>
+            <xsl:for-each select="header/menu/item">
+                <li><a href="{@link}"><xsl:value-of select="."/></a></li>
+            </xsl:for-each>
+        </ul>
+        <a id="admin-link" href="../admin/admin_panel.xml" style="display:none; margin-left: 20px; color: #ff3b3b; font-weight: bold;">
             Panel Admin
         </a>
     </nav>

@@ -50,7 +50,7 @@ function resolveImageSrc(imagen) {
     if (!imagen) return "../img/noimage.png";
     if (imagen.startsWith("data:")) return imagen;
     if (imagen.startsWith("http") || imagen.startsWith("../")) return imagen;
-    return "../tienda/img/" + imagen;
+    return "../img/" + imagen;
 }
 
 /* ===============================

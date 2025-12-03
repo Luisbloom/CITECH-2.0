@@ -12,10 +12,22 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Iniciar Sesión - CITECH</title>
+    <link rel="stylesheet" href="../global.css"/>
     <link rel="stylesheet" href="login.css"/>
 </head>
 
 <body>
+
+<header>
+    <img src="{header/logo}" class="logo"/>
+    <nav>
+        <ul>
+            <xsl:for-each select="header/menu/item">
+                <li><a href="{@link}"><xsl:value-of select="."/></a></li>
+            </xsl:for-each>
+        </ul>
+    </nav>
+</header>
 
 <div class="login-container">
 

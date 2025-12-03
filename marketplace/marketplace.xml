@@ -2,5 +2,21 @@
 <?xml-stylesheet type="text/xsl" href="marketplace.xsl"?>
 
 <marketplace>
+    <header>
+        <logo>../img/logo.png</logo>
+        <menu>
+            <item link="../index/index.xml#hero">Inicio</item>
+            <item link="../index/index.xml#servicios">Servicios</item>
+            <item link="../index/index.xml#quienes">Quiénes Somos</item>
+            <item link="../index/index.xml#equipo">Equipo</item>
+            <item link="../tienda/productos.xml">Tienda</item>
+            <item link="#">Marketplace</item>
+            <item link="../contacto/contacto.xml">Contacto</item>
+            <item link="../chatbot/chatbot.xml">Asistente IA</item>
+            <item link="../usuarios/login.xml">Iniciar Sesión</item>
+            <item link="../usuarios/registro.xml">Crear Cuenta</item>
+            <item link="../perfil/perfil_usuario.xml">Perfil</item>
+        </menu>
+    </header>
     <titulo>Marketplace</titulo>
 </marketplace>

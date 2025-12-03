@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="chatbot.xsl"?>
+
+<chatbot>
+    <header>
+        <logo>../img/logo.png</logo>
+        <menu>
+            <item link="../index/index.xml#hero">Inicio</item>
+            <item link="../index/index.xml#servicios">Servicios</item>
+            <item link="../index/index.xml#quienes">Quiénes Somos</item>
+            <item link="../index/index.xml#equipo">Equipo</item>
+            <item link="../tienda/productos.xml">Tienda</item>
+            <item link="../marketplace/marketplace.xml">Marketplace</item>
+            <item link="../contacto/contacto.xml">Contacto</item>
+            <item link="#">Asistente IA</item>
+            <item link="../usuarios/login.xml">Iniciar Sesión</item>
+            <item link="../usuarios/registro.xml">Crear Cuenta</item>
+            <item link="../perfil/perfil_usuario.xml">Perfil</item>
+        </menu>
+    </header>
+
+    <content>
+        <titulo>Asistente Virtual CITECH</titulo>
+        <subtitulo>Tu experto en tecnología, disponible 24/7</subtitulo>
+        <intro>
+            Hola, soy el asistente de IA de CITECH. Puedo ayudarte a elegir componentes,
+            resolver dudas técnicas o guiarte en tu compra. ¿En qué puedo ayudarte hoy?
+        </intro>
+        <sugerencias>
+            <sugerencia>¿Qué tarjeta gráfica necesito para jugar en 4K?</sugerencia>
+            <sugerencia>Diferencias entre Intel y AMD</sugerencia>
+            <sugerencia>Presupuesto para PC gaming de entrada</sugerencia>
+            <sugerencia>Problemas de temperatura en mi CPU</sugerencia>
+        </sugerencias>
+    </content>
+</chatbot>
