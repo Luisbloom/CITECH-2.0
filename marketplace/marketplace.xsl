@@ -44,11 +44,16 @@
         <div class="filtros">
             <select id="filtro-categoria">
                 <option value="todos">Todas las categorías</option>
-                <option value="componentes">Componentes</option>
-                <option value="perifericos">Periféricos</option>
-                <option value="pcs">PCs</option>
-                <option value="consolas">Consolas</option>
-                <option value="otros">Otros</option>
+                <option value="Tarjetas Gráficas">Tarjetas Gráficas</option>
+                <option value="Procesadores">Procesadores</option>
+                <option value="Placas Base">Placas Base</option>
+                <option value="Almacenamiento">Almacenamiento</option>
+                <option value="Memoria RAM">Memoria RAM</option>
+                <option value="Periféricos">Periféricos</option>
+                <option value="Sillas y Accesorios">Sillas y Accesorios</option>
+                <option value="PCs">PCs</option>
+                <option value="Consolas">Consolas</option>
+                <option value="Otros">Otros</option>
             </select>
         </div>
 
@@ -69,11 +74,16 @@
 
             <label>Categoría</label>
             <select id="pub-categoria" required="required">
-                <option value="componentes">Componentes</option>
-                <option value="perifericos">Periféricos</option>
-                <option value="pcs">PCs</option>
-                <option value="consolas">Consolas</option>
-                <option value="otros">Otros</option>
+                <option value="Tarjetas Gráficas">Tarjetas Gráficas</option>
+                <option value="Procesadores">Procesadores</option>
+                <option value="Placas Base">Placas Base</option>
+                <option value="Almacenamiento">Almacenamiento</option>
+                <option value="Memoria RAM">Memoria RAM</option>
+                <option value="Periféricos">Periféricos</option>
+                <option value="Sillas y Accesorios">Sillas y Accesorios</option>
+                <option value="PCs">PCs</option>
+                <option value="Consolas">Consolas</option>
+                <option value="Otros">Otros</option>
             </select>
 
             <label>Stock</label>

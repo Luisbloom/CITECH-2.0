@@ -9,7 +9,6 @@
             <item link="../index/index.xml#servicios">Servicios</item>
             <item link="../index/index.xml#quienes">Quiénes Somos</item>
             <item link="../index/index.xml#equipo">Equipo</item>
-            <item link="#">Tienda</item>
             <item link="../marketplace/marketplace.xml">Marketplace</item>
             <item link="../contacto/contacto.xml">Contacto</item>
             <item link="../chatbot/chatbot.xml">Asistente IA</item>
@@ -29,7 +28,7 @@
         </descripcion>
         <precio>1999.99</precio>
         <stock>15</stock>
-        <imagen>rtx4090.webp</imagen>
+        <imagen>rtx4090.png</imagen>
         <categoria>Tarjetas Gráficas</categoria>
     </producto>
 
@@ -41,7 +40,7 @@
         </descripcion>
         <precio>899.99</precio>
         <stock>25</stock>
-        <imagen>rtx4070ti.webp</imagen>
+        <imagen>4070.webp</imagen>
         <categoria>Tarjetas Gráficas</categoria>
     </producto>
 
@@ -55,7 +54,7 @@
         </descripcion>
         <precio>579.00</precio>
         <stock>30</stock>
-        <imagen>i9_14900k.webp</imagen>
+        <imagen>intel i9.webp</imagen>
         <categoria>Procesadores</categoria>
     </producto>
 
@@ -67,7 +66,7 @@
         </descripcion>
         <precio>649.99</precio>
         <stock>20</stock>
-        <imagen>ryzen7950x3d.webp</imagen>
+        <imagen>ryzen9.webp</imagen>
         <categoria>Procesadores</categoria>
     </producto>
 
@@ -81,7 +80,7 @@
         </descripcion>
         <precio>389.99</precio>
         <stock>18</stock>
-        <imagen>z790f.webp</imagen>
+        <imagen>placa base asus rog.webp</imagen>
         <categoria>Placas Base</categoria>
     </producto>
 
@@ -93,7 +92,7 @@
         </descripcion>
         <precio>239.99</precio>
         <stock>22</stock>
-        <imagen>b650_tomahawk.webp</imagen>
+        <imagen>msi mag.jpg</imagen>
         <categoria>Placas Base</categoria>
     </producto>
 
@@ -107,7 +106,7 @@
         </descripcion>
         <precio>179.99</precio>
         <stock>40</stock>
-        <imagen>990pro.webp</imagen>
+        <imagen>samsung 990 pro 4tb ssd.webp</imagen>
         <categoria>Almacenamiento</categoria>
     </producto>
 
@@ -119,7 +118,7 @@
         </descripcion>
         <precio>54.99</precio>
         <stock>50</stock>
-        <imagen>kingston_nv2.webp</imagen>
+        <imagen>kinston 1tb ssd.webp</imagen>
         <categoria>Almacenamiento</categoria>
     </producto>
 
@@ -133,7 +132,7 @@
         </descripcion>
         <precio>159.99</precio>
         <stock>35</stock>
-        <imagen>ddr5_corsair.webp</imagen>
+        <imagen>corsair vengeance ddr5.webp</imagen>
         <categoria>Memoria RAM</categoria>
     </producto>
 
@@ -145,8 +144,72 @@
         </descripcion>
         <precio>169.99</precio>
         <stock>28</stock>
-        <imagen>tridentz5.webp</imagen>
+        <imagen>G.Skill Trident Z5 Neo 32GB 6000MHz.webp</imagen>
         <categoria>Memoria RAM</categoria>
+    </producto>
+
+    <!-- ================== PERIFÉRICOS ================== -->
+
+    <producto>
+        <id>11</id>
+        <nombre>Logitech G Pro X Superlight 2</nombre>
+        <descripcion>
+            Ratón gaming inalámbrico ultraligero con sensor HERO 2 y switches híbridos LIGHTFORCE.
+        </descripcion>
+        <precio>159.00</precio>
+        <stock>25</stock>
+        <imagen>Logitech G Pro X Superlight 2.jpg</imagen>
+        <categoria>Periféricos</categoria>
+    </producto>
+
+    <producto>
+        <id>12</id>
+        <nombre>Razer Huntsman V3 Pro</nombre>
+        <descripcion>
+            Teclado óptico analógico para esports con accionamiento ajustable y modo de disparo rápido.
+        </descripcion>
+        <precio>249.99</precio>
+        <stock>15</stock>
+        <imagen>Razer Huntsman V3 Pro.webp</imagen>
+        <categoria>Periféricos</categoria>
+    </producto>
+
+    <producto>
+        <id>13</id>
+        <nombre>HyperX Cloud Alpha Wireless</nombre>
+        <descripcion>
+            Auriculares con hasta 300 horas de batería y audio espacial DTS Headphone:X.
+        </descripcion>
+        <precio>199.99</precio>
+        <stock>30</stock>
+        <imagen>HyperX Cloud Alpha Wireless.jpg</imagen>
+        <categoria>Periféricos</categoria>
+    </producto>
+
+    <!-- ================== SILLAS Y ACCESORIOS ================== -->
+
+    <producto>
+        <id>14</id>
+        <nombre>Secretlab TITAN Evo</nombre>
+        <descripcion>
+            La silla gaming definitiva con soporte lumbar integrado y tapicería premium.
+        </descripcion>
+        <precio>549.00</precio>
+        <stock>10</stock>
+        <imagen>Secretlab TITAN Evo.jpg</imagen>
+        <categoria>Sillas y Accesorios</categoria>
+    </producto>
+
+    <producto>
+        <id>15</id>
+        <nombre>Elgato Stream Deck MK.2</nombre>
+        <descripcion>
+            Controlador de contenido con 15 teclas LCD personalizables para streamers y creadores.
+        </descripcion>
+        <precio>149.99</precio>
+        <stock>40</stock>
+        <imagen>Elgato Stream Deck MK.2.jpg</imagen>
+        <categoria>Sillas y Accesorios</categoria>
     </producto>
 
 </tienda>

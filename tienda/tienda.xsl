@@ -59,6 +59,7 @@
             "nombre": "<xsl:value-of select='nombre'/>",
             "descripcion": "<xsl:value-of select='normalize-space(descripcion)'/>",
             "precio": <xsl:value-of select='precio'/>,
+            "stock": <xsl:value-of select='stock'/>,
             "imagen": "<xsl:value-of select='imagen'/>",
             "categoria": "<xsl:value-of select='categoria'/>"
           }<xsl:if test="position()!=last()">,</xsl:if>

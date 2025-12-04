@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const LS_STORE = 'CITECH_store_v1';
     const LS_MARKET = 'CITECH_market_v1';
     const LS_MOV = 'CITECH_movements_v1';
+    const LS_MESSAGES = 'CITECH_messages_v1';
 
     // Check admin access
     const currentUser = JSON.parse(localStorage.getItem(LS_CURRENT) || 'null');
@@ -109,6 +110,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('stat-products').textContent = store.length;
         document.getElementById('stat-marketplace').textContent = market.length;
         document.getElementById('stat-movements').textContent = movements.length;
+        document.getElementById('stat-movements').textContent = movements.length;
+    }
+
+    function resolveImageSrc(img) {
+        if (!img) return "../img/default_product.png";
+        if (img.startsWith("http") || img.startsWith("data:")) return img;
+        // Always use relative path to project img folder
+        return "../img/" + img;
     }
 
     // Products management
@@ -126,10 +135,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const products = JSON.parse(localStorage.getItem(LS_STORE) || '[]');
+
+        // Filter logic
+        const searchTerm = document.getElementById('search-products').value.toLowerCase();
+        const categoryFilter = document.getElementById('filter-category').value;
+
+        const filteredProducts = products.filter(p => {
+            const matchesSearch = p.nombre.toLowerCase().includes(searchTerm);
+            const matchesCategory = categoryFilter === '' || p.categoria === categoryFilter;
+            return matchesSearch && matchesCategory;
+        });
+
         const container = document.getElementById('products-table');
 
-        if (products.length === 0) {
-            container.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--txt-soft);">No hay productos en la tienda</p>';
+        if (filteredProducts.length === 0) {
+            container.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--txt-soft);">No se encontraron productos</p>';
             return;
         }
 
@@ -145,11 +165,13 @@ document.addEventListener('DOMContentLoaded', () => {
             </thead>
             <tbody>`;
 
-        products.forEach(product => {
+        filteredProducts.forEach(product => {
             html += `<tr>
                 <td>${product.nombre}</td>
                 <td>${product.precio.toFixed(2)}€</td>
-                <td>${product.stock}</td>
+                <td style="${product.stock <= 0 ? 'color: var(--error); font-weight: bold;' : ''}">
+                    ${product.stock > 0 ? product.stock : '0 (Agotado)'}
+                </td>
                 <td>${product.categoria}</td>
                 <td>
                     <button class="btn-secondary" onclick="editProduct('${product.id}')">Editar</button>
@@ -166,8 +188,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const filterSelect = document.getElementById('filter-category');
         filterSelect.innerHTML = '<option value="">Todas las categorías</option>';
         categories.forEach(cat => {
-            filterSelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+            // Only add if not already present (to avoid duplicates if re-running)
+            if (!filterSelect.querySelector(`option[value="${cat}"]`)) {
+                filterSelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+            }
         });
+
+        // Restore selected value
+        filterSelect.value = categoryFilter;
     }
 
     // Add product button
@@ -244,7 +272,9 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('product-stock').value = product.stock;
             document.getElementById('product-category').value = product.categoria;
             document.getElementById('product-description').value = product.descripcion || '';
-            imagePreview.src = product.imagen;
+            document.getElementById('product-category').value = product.categoria;
+            document.getElementById('product-description').value = product.descripcion || '';
+            imagePreview.src = resolveImageSrc(product.imagen);
             document.getElementById('modal-title').textContent = 'Editar Producto';
             productModal.classList.add('active');
         }
@@ -342,10 +372,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load movements
     function loadMovements() {
         const movements = JSON.parse(localStorage.getItem(LS_MOV) || '[]');
+
+        // Filter logic
+        const searchTerm = document.getElementById('search-movements').value.toLowerCase();
+        const typeFilter = document.getElementById('filter-movement-type').value;
+
+        const filteredMovements = movements.filter(m => {
+            const user = m.usuarioNombre || m.usuario || '';
+            const prod = m.producto || '';
+            const matchesSearch = user.toLowerCase().includes(searchTerm) || prod.toLowerCase().includes(searchTerm);
+            const matchesType = typeFilter === '' || m.tipo === typeFilter;
+            return matchesSearch && matchesType;
+        });
+
         const container = document.getElementById('movements-table');
 
-        if (movements.length === 0) {
-            container.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--txt-soft);">No hay movimientos registrados</p>';
+        if (filteredMovements.length === 0) {
+            container.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--txt-soft);">No se encontraron movimientos</p>';
             return;
         }
 
@@ -362,7 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </thead>
             <tbody>`;
 
-        movements.sort((a, b) => new Date(b.fecha) - new Date(a.fecha)).forEach(mov => {
+        filteredMovements.sort((a, b) => new Date(b.fecha) - new Date(a.fecha)).forEach(mov => {
             const date = new Date(mov.fecha).toLocaleString();
             html += `<tr>
                 <td>${date}</td>
@@ -378,6 +421,195 @@ document.addEventListener('DOMContentLoaded', () => {
         container.innerHTML = html;
     }
 
+    // Load messages
+    function loadMessages() {
+        const messages = JSON.parse(localStorage.getItem(LS_MESSAGES) || '[]');
+
+        // Filter logic
+        const searchTerm = document.getElementById('search-messages').value.toLowerCase();
+        const statusFilter = document.getElementById('filter-message-status').value;
+
+        const filteredMessages = messages.filter(m => {
+            const matchesSearch = m.nombre.toLowerCase().includes(searchTerm) ||
+                m.email.toLowerCase().includes(searchTerm) ||
+                m.mensaje.toLowerCase().includes(searchTerm);
+            const matchesStatus = statusFilter === '' ||
+                (statusFilter === 'read' && m.leido) ||
+                (statusFilter === 'unread' && !m.leido);
+            return matchesSearch && matchesStatus;
+        });
+
+        const container = document.getElementById('messages-table');
+
+        if (filteredMessages.length === 0) {
+            container.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--txt-soft);">No se encontraron mensajes</p>';
+            return;
+        }
+
+        let html = `<table>
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Asunto</th>
+                    <th>Mensaje</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+        filteredMessages.sort((a, b) => new Date(b.fecha) - new Date(a.fecha)).forEach(msg => {
+            const date = new Date(msg.fecha).toLocaleString();
+            const estado = msg.leido ? '✅ Leído' : '📧 No leído';
+            const estadoClass = msg.leido ? '' : 'style="font-weight: bold;"';
+
+            const truncatedMsg = msg.mensaje.length > 50 ? msg.mensaje.substring(0, 50) + '...' : msg.mensaje;
+
+            html += `<tr ${estadoClass} style="cursor: pointer;" onclick="viewFullMessage('${msg.id}')">
+                <td>${date}</td>
+                <td>${msg.nombre}</td>
+                <td>${msg.email}</td>
+                <td>${msg.asunto || '-'}</td>
+                <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">${truncatedMsg}</td>
+                <td>${estado}</td>
+                <td onclick="event.stopPropagation()">
+                    ${!msg.leido ? `<button class="btn-secondary" onclick="markAsRead('${msg.id}')">Marcar leído</button>` : ''}
+                    <button class="btn-danger" onclick="deleteMessage('${msg.id}')">Eliminar</button>
+                </td>
+            </tr>`;
+        });
+
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+
+    // Mark message as read
+    window.markAsRead = (id) => {
+        const messages = JSON.parse(localStorage.getItem(LS_MESSAGES) || '[]');
+        const msg = messages.find(m => m.id === id);
+        if (msg) {
+            msg.leido = true;
+            localStorage.setItem(LS_MESSAGES, JSON.stringify(messages));
+            loadMessages();
+        }
+    };
+
+    // Delete message
+    window.deleteMessage = (id) => {
+        if (confirm('¿Eliminar este mensaje?')) {
+            let messages = JSON.parse(localStorage.getItem(LS_MESSAGES) || '[]');
+            messages = messages.filter(m => m.id !== id);
+            localStorage.setItem(LS_MESSAGES, JSON.stringify(messages));
+            loadMessages();
+        }
+    };
+
+    // View full message
+    window.viewFullMessage = (id) => {
+        const messages = JSON.parse(localStorage.getItem(LS_MESSAGES) || '[]');
+        const msg = messages.find(m => m.id === id);
+        if (msg) {
+            const modal = document.getElementById('message-modal');
+            const body = document.getElementById('msg-modal-body');
+            const markReadBtn = document.getElementById('msg-mark-read-btn');
+
+            const htmlContent = `
+                <div style="background: var(--card); padding: 24px; border-radius: 12px; border-left: 4px solid var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="display: grid; gap: 16px;">
+                        <div style="display: flex; align-items: start; gap: 12px;">
+                            <span style="color: var(--accent); font-size: 1.2em; flex-shrink: 0;">👤</span>
+                            <div style="flex: 1; min-width: 0;">
+                                <strong style="color: var(--accent); display: block; margin-bottom: 4px; font-size: 0.9em;">Nombre</strong>
+                                <p style="margin: 0; word-wrap: break-word; overflow-wrap: break-word;">${msg.nombre}</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: start; gap: 12px;">
+                            <span style="color: var(--accent); font-size: 1.2em; flex-shrink: 0;">📧</span>
+                            <div style="flex: 1; min-width: 0;">
+                                <strong style="color: var(--accent); display: block; margin-bottom: 4px; font-size: 0.9em;">Email</strong>
+                                <p style="margin: 0; word-wrap: break-word; overflow-wrap: break-word; font-size: 0.95em;">${msg.email}</p>
+                            </div>
+                        </div>
+                        ${msg.telefono ? `
+                        <div style="display: flex; align-items: start; gap: 12px;">
+                            <span style="color: var(--accent); font-size: 1.2em; flex-shrink: 0;">📞</span>
+                            <div style="flex: 1; min-width: 0;">
+                                <strong style="color: var(--accent); display: block; margin-bottom: 4px; font-size: 0.9em;">Teléfono</strong>
+                                <p style="margin: 0;">${msg.telefono}</p>
+                            </div>
+                        </div>` : ''}
+                        ${msg.asunto ? `
+                        <div style="display: flex; align-items: start; gap: 12px;">
+                            <span style="color: var(--accent); font-size: 1.2em; flex-shrink: 0;">📋</span>
+                            <div style="flex: 1; min-width: 0;">
+                                <strong style="color: var(--accent); display: block; margin-bottom: 4px; font-size: 0.9em;">Asunto</strong>
+                                <p style="margin: 0; word-wrap: break-word; overflow-wrap: break-word;">${msg.asunto}</p>
+                            </div>
+                        </div>` : ''}
+                        <div style="display: flex; align-items: start; gap: 12px;">
+                            <span style="color: var(--accent); font-size: 1.2em; flex-shrink: 0;">📅</span>
+                            <div style="flex: 1; min-width: 0;">
+                                <strong style="color: var(--accent); display: block; margin-bottom: 4px; font-size: 0.9em;">Fecha</strong>
+                                <p style="margin: 0;">${new Date(msg.fecha).toLocaleString()}</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: start; gap: 12px;">
+                            <span style="color: var(--accent); font-size: 1.2em; flex-shrink: 0;">📬</span>
+                            <div style="flex: 1; min-width: 0;">
+                                <strong style="color: var(--accent); display: block; margin-bottom: 4px; font-size: 0.9em;">Estado</strong>
+                                <p style="margin: 0;">${msg.leido ? '✅ Leído' : '📧 No leído'}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="background: var(--bg); padding: 24px; border-radius: 12px; margin-top: 20px; border: 1px solid var(--border); box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 2px solid var(--border);">
+                        <span style="color: var(--accent); font-size: 1.3em;">💬</span>
+                        <strong style="color: var(--accent); font-size: 1.05em;">Mensaje</strong>
+                    </div>
+                    <p style="margin: 0; line-height: 1.7; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; max-width: 100%; hyphens: auto;">${msg.mensaje}</p>
+                </div>
+            `;
+
+            body.innerHTML = htmlContent;
+            markReadBtn.style.display = msg.leido ? 'none' : 'inline-block';
+            markReadBtn.onclick = () => markAsReadFromModal(msg.id);
+            modal.style.display = 'flex';
+
+            // Mark as read when viewed
+            if (!msg.leido) {
+                msg.leido = true;
+                localStorage.setItem(LS_MESSAGES, JSON.stringify(messages));
+                setTimeout(() => loadMessages(), 500);
+            }
+        }
+    };
+
+    // Close message modal
+    window.closeMessageModal = () => {
+        document.getElementById('message-modal').style.display = 'none';
+    };
+
+    // Mark as read from modal
+    window.markAsReadFromModal = (id) => {
+        if (id) {
+            markAsRead(id);
+        }
+        closeMessageModal();
+    };
+
+    // Event Listeners for Filters
+    document.getElementById('search-products').addEventListener('input', loadProducts);
+    document.getElementById('filter-category').addEventListener('change', loadProducts);
+
+    document.getElementById('search-movements').addEventListener('input', loadMovements);
+    document.getElementById('filter-movement-type').addEventListener('change', loadMovements);
+
+    document.getElementById('search-messages').addEventListener('input', loadMessages);
+    document.getElementById('filter-message-status').addEventListener('change', loadMessages);
+
     // Initialize
     (async () => {
         await loadProducts();
@@ -385,5 +617,6 @@ document.addEventListener('DOMContentLoaded', () => {
         loadMarketplace();
         loadUsers();
         loadMovements();
+        loadMessages();
     })();
 });

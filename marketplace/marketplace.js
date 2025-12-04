@@ -116,7 +116,7 @@ function createMarketProduct(nombre, precio, categoria, stock, imagenData) {
     pubNombre.value = "";
     pubPrecio.value = "";
     pubStock.value = "1";
-    pubCategoria.value = "componentes";
+    pubCategoria.value = "Otros";
     pubImagen.value = "";
 
     publicarPanel.classList.remove("active");

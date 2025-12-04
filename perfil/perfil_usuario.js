@@ -264,8 +264,8 @@ if (btnComprar) {
         let marketLocal = JSON.parse(localStorage.getItem(LS_MARKET) || "[]");
         let prod = marketLocal.find(p => p.id === item.id);
         if (prod) {
-          prod.stock = (prod.stock || 0) - item.qty;
-          if (prod.stock <= 0) marketLocal = marketLocal.filter(p => p.id !== prod.id);
+          prod.stock = Math.max(0, (prod.stock || 0) - item.qty);
+          // Don't remove product, keep it with stock 0
           localStorage.setItem(LS_MARKET, JSON.stringify(marketLocal));
         }
       } else {
@@ -273,8 +273,8 @@ if (btnComprar) {
         let storeLocal = JSON.parse(localStorage.getItem(LS_STORE) || "[]");
         let prodS = storeLocal.find(s => s.id === item.id);
         if (prodS) {
-          prodS.stock = (prodS.stock || 0) - item.qty;
-          if (prodS.stock <= 0) storeLocal = storeLocal.filter(s => s.id !== prodS.id);
+          prodS.stock = Math.max(0, (prodS.stock || 0) - item.qty);
+          // Don't remove product, keep it with stock 0
           localStorage.setItem(LS_STORE, JSON.stringify(storeLocal));
         }
       }

@@ -33,6 +33,7 @@
         <button class="sidebar-btn" data-panel="products">📦 Productos Tienda</button>
         <button class="sidebar-btn" data-panel="marketplace">🛒 Marketplace</button>
         <button class="sidebar-btn" data-panel="users">👥 Usuarios</button>
+        <button class="sidebar-btn" data-panel="messages">✉️ Mensajes</button>
         <button class="sidebar-btn" data-panel="movements">💳 Movimientos</button>
         <button class="sidebar-btn logout" id="btn-logout">🚪 Salir</button>
     </aside>
@@ -93,6 +94,20 @@
             <div id="marketplace-table" class="table-container"></div>
         </section>
 
+        <!-- Messages Panel -->
+        <section id="panel-messages" class="admin-panel">
+            <h1>Mensajes de Contacto</h1>
+            <div class="panel-controls">
+                <input type="text" id="search-messages" placeholder="Buscar mensajes..."/>
+                <select id="filter-message-status">
+                    <option value="">Todos los mensajes</option>
+                    <option value="unread">No leídos</option>
+                    <option value="read">Leídos</option>
+                </select>
+            </div>
+            <div id="messages-table" class="table-container"></div>
+        </section>
+
         <!-- Users Panel -->
         <section id="panel-users" class="admin-panel">
             <h1>Gestión de Usuarios</h1>
@@ -126,9 +141,14 @@
             <label>Stock <input type="number" id="product-stock" min="0" required="required"/></label>
             <label>Categoría 
                 <select id="product-category" required="required">
-                    <option value="componentes">Componentes</option>
-                    <option value="perifericos">Periféricos</option>
-                    <option value="otros">Otros</option>
+                    <option value="Tarjetas Gráficas">Tarjetas Gráficas</option>
+                    <option value="Procesadores">Procesadores</option>
+                    <option value="Placas Base">Placas Base</option>
+                    <option value="Almacenamiento">Almacenamiento</option>
+                    <option value="Memoria RAM">Memoria RAM</option>
+                    <option value="Periféricos">Periféricos</option>
+                    <option value="Sillas y Accesorios">Sillas y Accesorios</option>
+                    <option value="Otros">Otros</option>
                 </select>
             </label>
             <label>Descripción <textarea id="product-description"></textarea></label>
@@ -142,7 +162,23 @@
     </div>
 </div>
 
+<!-- Message View Modal -->
+<div id="message-modal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 10000; align-items: center; justify-content: center;">
+    <div class="modal-content" style="max-width: 600px; width: 90%; max-height: 85vh; overflow-y: auto; position: relative;">
+        <span class="close" onclick="closeMessageModal()">×</span>
+        <h2 id="msg-modal-title">📧 Mensaje de Contacto</h2>
+        <div id="msg-modal-body" style="padding: 20px 0;">
+            <!-- Content will be injected here -->
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+            <button class="btn-secondary" id="msg-mark-read-btn" onclick="markAsReadFromModal()">Marcar como leído</button>
+            <button class="btn-primary" onclick="closeMessageModal()">Cerrar</button>
+        </div>
+    </div>
+</div>
+
 <script src="admin_panel.js"></script>
+
 
 </body>
 </html>

@@ -39,18 +39,27 @@ document.addEventListener("DOMContentLoaded", () => {
         filterCat.appendChild(opt);
     });
 
+    // Helper to resolve image source
+    function resolveImageSrc(img) {
+        if (!img) return "../img/default_product.png";
+        if (img.startsWith("http") || img.startsWith("data:")) return img;
+        // Always use relative path to project img folder
+        return "../img/" + img;
+    }
+
     // --- Render ---
     function render(list = productos) {
         grid.innerHTML = "";
         list.forEach(p => {
             const stock = p.stock || 0;
             const stockClass = stock > 10 ? 'stock-good' : stock > 0 ? 'stock-low' : 'stock-out';
-            const stockText = stock > 0 ? `${stock} disponibles` : 'Agotado';
+            const stockText = stock > 0 ? `${stock} disponibles` : '0 disponibles (Agotado)';
+            const imgSrc = resolveImageSrc(p.imagen);
 
             const card = document.createElement("div");
             card.className = "card";
             card.innerHTML = `
-                <img src="../img/${p.imagen}">
+                <img src="${imgSrc}">
                 <h4>${p.nombre}</h4>
                 <p class="desc">${p.descripcion}</p>
                 <div class="stock-badge ${stockClass}">${stockText}</div>
@@ -120,24 +129,63 @@ document.addEventListener("DOMContentLoaded", () => {
         const p = productos.find(x => x.id == id);
         const stock = p.stock || 0;
         const stockClass = stock > 10 ? 'stock-good' : stock > 0 ? 'stock-low' : 'stock-out';
-        const stockText = stock > 0 ? `Stock disponible: ${stock} unidades` : '❌ Producto agotado';
+        const stockText = stock > 0 ? `✓ Stock disponible: ${stock} unidades` : '✗ Producto agotado (0 unidades)';
+        const imgSrc = resolveImageSrc(p.imagen);
+
+        // Stock icon
+        const stockIcon = stock > 10 ? '✓' : stock > 0 ? '⚠' : '✗';
 
         modalBody.innerHTML = `
-            <h2>${p.nombre}</h2>
-            <img src="../img/${p.imagen}" class="modal-img">
-            <p>${p.descripcion}</p>
-            <p class="price-large">${p.precio.toFixed(2)} €</p>
-            <div class="stock-info ${stockClass}">${stockText}</div>
-            <button class="btn-primary" id="modal-add" data-id="${p.id}" ${stock <= 0 ? 'disabled' : ''}>Añadir al carrito</button>
+            <button class="modal-close" aria-label="Cerrar">✕</button>
+            
+            <div class="modal-header">
+                <h2>${p.nombre}</h2>
+                <span class="modal-category-badge">📦 ${p.categoria}</span>
+            </div>
+            
+            <div class="modal-body-grid">
+                <div class="modal-img-container">
+                    <div class="modal-product-id">ID: #${p.id}</div>
+                    <img src="${imgSrc}" class="modal-img" alt="${p.nombre}">
+                </div>
+                
+                <div class="modal-info">
+                    <div>
+                        <div class="modal-description">
+                            ${p.descripcion}
+                        </div>
+                        
+                        <div class="stock-info ${stockClass}">
+                            ${stockIcon} ${stockText}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="modal-price-section">
+                            <div class="price-label">Precio</div>
+                            <div class="price-large">${p.precio.toFixed(2)} €</div>
+                        </div>
+                        
+                        <div class="modal-actions">
+                            <button class="btn-primary" id="modal-add" data-id="${p.id}" ${stock <= 0 ? 'disabled' : ''}>
+                                ${stock <= 0 ? '🔒 No disponible' : '🛒 Añadir al carrito'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         `;
         modal.classList.add("open");
 
         document.querySelector(".modal-close").onclick = () =>
             modal.classList.remove("open");
 
-        document.querySelector("#modal-add").onclick = () =>
-            addToCart(id);
+        const modalAddBtn = document.querySelector("#modal-add");
+        if (modalAddBtn) {
+            modalAddBtn.onclick = () => addToCart(id);
+        }
     }
+
 
     // --- Filtros ---
     function filter() {
