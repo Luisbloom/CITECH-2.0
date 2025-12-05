@@ -24,8 +24,8 @@
         <descripcion>Estamos aquí para ayudarte. Envíanos un mensaje o visítanos.</descripcion>
         <datos>
             <dato tipo="email">soporte@citech.com</dato>
-            <dato tipo="telefono">+34 912 345 678</dato>
-            <dato tipo="direccion">Calle Tecnología 123, Madrid, España</dato>
+            <dato tipo="telefono">333 333 333</dato>
+            <dato tipo="direccion">Calle Cited, Jerez de la Frontera, España</dato>
         </datos>
     </info>
 

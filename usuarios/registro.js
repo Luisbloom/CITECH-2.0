@@ -19,7 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const cp = document.querySelector("#dir-cp").value;
 
         const nacimiento = document.querySelector("#nacimiento").value;
-        const seguridad = document.querySelector("#seguridad").value;
 
         const pass = document.querySelector("#pass").value;
         const pass2 = document.querySelector("#pass2").value;
@@ -46,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
             nombre: nombre,
             usuario: usuario,
             email: email,
-            pass: pass,
+            password: pass,
             telefono: telefono,
             direccion: {
                 calle: calle,
@@ -55,7 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 cp: cp
             },
             nacimiento: nacimiento,
-            seguridad: seguridad,
             saldo: 0,
             tipo: "cliente",
             transacciones: []

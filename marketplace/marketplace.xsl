@@ -108,6 +108,7 @@
 </main>
 
 <script src="marketplace.js"></script>
+<script src="../global-nav.js"></script>
 
 </body>
 </html>

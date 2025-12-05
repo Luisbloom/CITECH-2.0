@@ -63,6 +63,7 @@
         </main>
 
         <script src="chatbot.js"></script>
+        <script src="../global-nav.js"></script>
     </body>
     </html>
     </xsl:template>

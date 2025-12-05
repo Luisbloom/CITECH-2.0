@@ -1,11 +1,29 @@
-/* GENERAL */
+/* LOGIN STYLES */
+
+:root {
+    /* Colors */
+    --primary: #00eaff;
+    --secondary: #7b00ff;
+    --bg-dark: #0a0e27;
+    --bg-dark-secondary: #141b35;
+    --text-light: #ffffff;
+    --text-soft: #a8b9d8;
+    --border-color: rgba(255, 255, 255, 0.1);
+
+    /* Shadows */
+    --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.35);
+
+    /* Transitions */
+    --transition: 0.3s ease;
+}
+
 body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background: var(--bg-dark);
 }
 
-/* MAIN CONTENT WRAPPER */
 .login-container {
     flex: 1;
     display: flex;
@@ -17,87 +35,100 @@ body {
     margin: 0 auto;
 }
 
-/* TARJETA DE LOGIN */
 .login-card {
-    background: rgba(18, 28, 60, 0.92);
-    border-radius: 12px;
-    padding: 30px 35px;
-    box-shadow: 0 0 25px rgba(0, 210, 255, 0.15);
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(0, 255, 255, 0.12);
+    background: var(--bg-dark-secondary);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
     width: 100%;
+    position: relative;
+    overflow: hidden;
 }
 
-/* TÍTULO */
+.login-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+}
+
 .login-card h1 {
     text-align: center;
-    margin-bottom: 25px;
-    font-size: 28px;
-    color: cyan;
+    margin-bottom: 30px;
+    font-size: 2rem;
+    color: var(--text-light);
     letter-spacing: 1px;
+    background: linear-gradient(135deg, var(--primary), #fff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-/* LABEL */
 .login-card label {
     display: block;
-    margin-bottom: 6px;
-    font-size: 14px;
-    color: #b9c9ff;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: var(--text-soft);
 }
 
-/* INPUT */
 .login-card input {
     width: 100%;
     padding: 12px;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
     border-radius: 8px;
     border: none;
-    background: #101933;
+    background: var(--bg-dark);
     color: white;
-    font-size: 15px;
+    font-size: 1rem;
     outline: none;
-    border: 1px solid transparent;
-    transition: 0.3s;
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
 }
 
 .login-card input:focus {
-    border-color: cyan;
-    box-shadow: 0 0 6px rgba(0, 255, 255, 0.4);
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(0, 234, 255, 0.2);
 }
 
-/* BOTÓN */
 .btn-primary {
     width: 100%;
-    padding: 12px;
-    background: cyan;
-    color: #01121c;
+    padding: 14px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    color: #000;
     font-weight: bold;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 16px;
-    transition: 0.25s;
+    font-size: 1rem;
+    transition: var(--transition);
+    margin-top: 10px;
 }
 
 .btn-primary:hover {
-    background: #00eaff;
-    box-shadow: 0 0 12px rgba(0, 255, 255, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(0, 234, 255, 0.4);
 }
 
-/* TEXTO SECUNDARIO */
 .alt {
-    margin-top: 15px;
+    margin-top: 20px;
     text-align: center;
-    font-size: 14px;
-    color: #9eb4ff;
+    font-size: 0.9rem;
+    color: var(--text-soft);
 }
 
 .alt a {
-    color: cyan;
+    color: var(--primary);
     text-decoration: none;
     font-weight: bold;
+    transition: var(--transition);
 }
 
 .alt a:hover {
     text-decoration: underline;
+    text-shadow: 0 0 8px rgba(0, 234, 255, 0.4);
 }

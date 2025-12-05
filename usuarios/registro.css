@@ -3,6 +3,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background: var(--bg-dark);
 }
 
 /* MAIN CONTENT WRAPPER */
@@ -19,31 +20,47 @@ body {
 
 /* TARJETA FORMULARIO */
 .reg-card {
-    background: rgba(18, 28, 60, 0.92);
-    padding: 35px 40px;
-    border-radius: 12px;
-    box-shadow: 0 0 25px rgba(0, 210, 255, 0.15);
-    border: 1px solid rgba(0, 255, 255, 0.12);
-    backdrop-filter: blur(6px);
+    background: var(--bg-secondary);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(10px);
     width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.reg-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
 }
 
 /* TÍTULO */
 .reg-card h1 {
     text-align: center;
-    font-size: 28px;
-    color: cyan;
+    font-size: 2rem;
+    color: var(--txt-light);
     margin-bottom: 30px;
     letter-spacing: 1px;
+    background: linear-gradient(135deg, var(--primary), #fff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 /* ETIQUETAS */
 .reg-card label {
     display: block;
-    margin-bottom: 6px;
-    margin-top: 10px;
-    color: #c0d2ff;
-    font-size: 14px;
+    margin-bottom: 8px;
+    margin-top: 15px;
+    color: var(--txt-soft);
+    font-size: 0.9rem;
 }
 
 /* INPUTS */
@@ -53,72 +70,79 @@ body {
 .reg-card input[type="date"] {
     width: 100%;
     padding: 12px;
-    margin-bottom: 12px;
+    margin-bottom: 5px;
     border-radius: 8px;
     border: none;
-    background: #101933;
+    background: var(--bg-dark);
     color: white;
-    font-size: 15px;
+    font-size: 1rem;
     outline: none;
-    border: 1px solid transparent;
-    transition: 0.3s;
+    border: 1px solid var(--card-border);
+    transition: var(--transition);
 }
 
 .reg-card input:focus {
-    border-color: cyan;
-    box-shadow: 0 0 6px rgba(0, 255, 255, 0.5);
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(0, 234, 255, 0.2);
 }
 
 /* GRUPO CHECKBOX */
 .check-group {
     display: flex;
     align-items: center;
-    margin-top: 10px;
+    margin-top: 20px;
+    gap: 10px;
 }
 
 .check-group input[type="checkbox"] {
-    margin-right: 8px;
-    transform: scale(1.25);
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary);
+    cursor: pointer;
 }
 
 .check-group label {
     margin-top: 0;
-    font-size: 14px;
+    font-size: 0.9rem;
+    cursor: pointer;
 }
 
 /* BOTÓN */
 .btn-primary {
     width: 100%;
-    padding: 12px;
-    background: cyan;
-    color: #07131c;
+    padding: 14px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    color: #000;
     border: none;
     border-radius: 8px;
-    font-size: 16px;
-    margin-top: 15px;
+    font-size: 1rem;
+    margin-top: 25px;
     cursor: pointer;
     font-weight: bold;
-    transition: 0.25s;
+    transition: var(--transition);
 }
 
 .btn-primary:hover {
-    background: #00eaff;
-    box-shadow: 0 0 12px rgba(0, 255, 255, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(0, 234, 255, 0.4);
 }
 
 /* TEXTO SECUNDARIO */
 .alt {
     text-align: center;
-    margin-top: 18px;
-    color: #96aaff;
+    margin-top: 20px;
+    color: var(--txt-soft);
+    font-size: 0.9rem;
 }
 
 .alt a {
-    color: cyan;
+    color: var(--primary);
     text-decoration: none;
     font-weight: bold;
+    transition: var(--transition);
 }
 
 .alt a:hover {
     text-decoration: underline;
+    text-shadow: 0 0 8px rgba(0, 234, 255, 0.4);
 }

@@ -22,10 +22,9 @@
     </header>
 
     <hero id="hero">
-        <titulo>CITECH • Tecnología que Eleva tu Potencial</titulo>
+        <titulo>CITECH - Tu tienda de tecnología</titulo>
         <subtitulo>
-            Hardware de alto rendimiento, soluciones con IA integrada y servicios profesionales
-            para gamers, creadores de contenido y empresas que buscan la excelencia.
+            Encuentra los mejores componentes y equipos informáticos. Compra, vende y gestiona tus productos con nuestro asistente IA.
         </subtitulo>
 
         <botones>
@@ -44,7 +43,7 @@
             </stat>
             <stat>
                 <numero>120</numero>
-                <texto>Equipos Premium</texto>
+                <texto>Equipos Montados</texto>
             </stat>
             <stat>
                 <numero>98</numero>
@@ -94,33 +93,39 @@
         <tarjetas>
 
             <servicio>
-                <icono>🖥️</icono>
-                <titulo>Montaje Premium</titulo>
+                <icono>🛒</icono>
+                <titulo>Tienda Online</titulo>
                 <descripcion>
-                    Ensamblaje profesional con cable management impecable, 
-                    optimización térmica y testing exhaustivo.
+                    Catálogo completo de componentes: tarjetas gráficas, procesadores, periféricos y más. Con sistema de carrito y gestión de pedidos.
                 </descripcion>
-                <precio>Desde 99€</precio>
+                <precio>Ver Productos</precio>
             </servicio>
 
             <servicio>
-                <icono>⚡</icono>
-                <titulo>Optimización Avanzada</titulo>
+                <icono>🤖</icono>
+                <titulo>Asistente IA</titulo>
                 <descripcion>
-                    Aumentamos rendimiento, estabilidad y FPS mediante 
-                    overclock seguro y tweaking del sistema.
+                    Chatbot inteligente que te ayuda a encontrar el producto perfecto para tus necesidades y resuelve tus dudas al instante.
                 </descripcion>
-                <precio>Desde 49€</precio>
+                <precio>Gratis</precio>
             </servicio>
 
             <servicio>
-                <icono>🔧</icono>
-                <titulo>Soporte Técnico 24/7</titulo>
+                <icono>🏪</icono>
+                <titulo>Marketplace</titulo>
                 <descripcion>
-                    Diagnóstico experto, mantenimiento preventivo, 
-                    upgrades y reparación con piezas originales.
+                    Compra y vende productos entre usuarios. Publica tus artículos usados o encuentra ofertas únicas de otros vendedores.
                 </descripcion>
-                <precio>Desde 29€</precio>
+                <precio>Acceso Libre</precio>
+            </servicio>
+
+            <servicio>
+                <icono>👤</icono>
+                <titulo>Gestión de Cuenta</titulo>
+                <descripcion>
+                    Administra tu perfil, recarga saldo, consulta tu historial de compras y movimientos. Todo en un solo lugar.
+                </descripcion>
+                <precio>Panel Completo</precio>
             </servicio>
 
         </tarjetas>
@@ -129,9 +134,8 @@
     <quienes_somos id="quienes">
         <titulo>¿Quiénes Somos?</titulo>
         <descripcion>
-            CITECH nace de la pasión por la tecnología y el compromiso con la excelencia.
-            Somos un equipo de expertos dedicados a ofrecer soluciones tecnológicas de alto rendimiento,
-            combinando innovación, calidad y un servicio personalizado que supera expectativas.
+            Somos una tienda online de tecnología enfocada en ofrecer productos de calidad a buenos precios.
+            Utilizamos tecnología moderna como IA para hacer tu experiencia de compra más fácil y personalizada.
         </descripcion>
 
         <valores>
@@ -160,26 +164,24 @@
         <miembros>
 
             <miembro>
-                <nombre>Luis Miguel Pablos</nombre>
-                <rol>Fundador / Desarrollador Full-Stack</rol>
+                <nombre>Luis Miguel Pablos Orge</nombre>
+                <rol>Fundador / Desarrollador</rol>
                 <foto>../img/luis.png</foto>
-                <descripcion>Experto en desarrollo web y soluciones tecnológicas</descripcion>
             </miembro>
 
             <miembro>
                 <nombre>Mario Rodríguez</nombre>
-                <rol>Especialista en Soporte Técnico</rol>
+                <rol>Fundador / Desarrollador</rol>
                 <foto>../img/mario.png</foto>
-                <descripcion>Hardware enthusiast con años de experiencia</descripcion>
             </miembro>
 
         </miembros>
     </equipo>
 
     <cta id="cta">
-        <titulo>¿Listo para mejorar tu setup?</titulo>
+        <titulo>Empieza a comprar hoy</titulo>
         <descripcion>
-            Explora nuestra tienda o contacta con nuestro equipo para una consulta personalizada
+            Explora nuestro catálogo de productos o chatea con nuestro asistente IA para encontrar lo que necesitas
         </descripcion>
         <botones>
             <boton tipo="primario" link="../tienda/productos.xml">Ver Tienda</boton>

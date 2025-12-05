@@ -71,6 +71,7 @@
         </main>
 
         <script src="contacto.js"></script>
+        <script src="../global-nav.js"></script>
     </body>
     </html>
     </xsl:template>

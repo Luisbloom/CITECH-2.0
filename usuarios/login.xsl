@@ -51,6 +51,7 @@
 </div>
 
 <script src="login.js"></script>
+<script src="../global-nav.js"></script>
 
 </body>
 </html>

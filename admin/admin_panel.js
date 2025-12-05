@@ -207,16 +207,6 @@ document.addEventListener('DOMContentLoaded', () => {
         productModal.classList.add('active');
     });
 
-    // Reload from XML button
-    document.getElementById('btn-reload-xml').addEventListener('click', async () => {
-        if (confirm('¿Recargar productos desde XML? Los productos editados mantendrán sus cambios.')) {
-            await syncProductsWithXML();
-            await loadProducts();
-            loadDashboard();
-            alert('Productos sincronizados desde XML');
-        }
-    });
-
     // Cancel modal
     document.getElementById('btn-cancel-modal').addEventListener('click', () => {
         productModal.classList.remove('active');

@@ -40,7 +40,6 @@
         <ul>
             <li class="selected" data-panel="info">Información</li>
             <li data-panel="editar">Editar Perfil</li>
-            <li data-panel="password">Cambiar Contraseña</li>
             <li data-panel="foto">Foto de Perfil</li>
             <li data-panel="saldo">Saldo</li>
             <li data-panel="carrito">Carrito</li>
@@ -114,26 +113,6 @@
             </form>
         </div>
 
-        <!-- PANEL CAMBIAR CONTRASEÑA -->
-        <div id="panel-password" class="panel">
-            <h2>Cambiar Contraseña</h2>
-
-            <form class="formulario">
-                <label>Contraseña actual</label>
-                <input type="password" id="pass-actual"/>
-
-                <label>Nueva contraseña</label>
-                <input type="password" id="pass-nueva"/>
-
-                <label>Confirmar nueva contraseña</label>
-                <input type="password" id="pass-confirm"/>
-
-                <button type="button" id="btn-cambiar-pass" class="btn-primary">
-                    Actualizar Contraseña
-                </button>
-            </form>
-        </div>
-
         <!-- PANEL FOTO DE PERFIL -->
         <div id="panel-foto" class="panel">
             <h2>Foto de Perfil</h2>
@@ -175,7 +154,11 @@
                     <tr>
                         <th>Fecha</th>
                         <th>Tipo</th>
-                        <th>Monto</th>
+                        <th>Origen</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unit.</th>
+                        <th>Importe</th>
                         <th>Descripción</th>
                     </tr>
                 </thead>
@@ -201,6 +184,7 @@
 </main>
 
 <script src="perfil_usuario.js"></script>
+<script src="../global-nav.js"></script>
 
 </body>
 </html>

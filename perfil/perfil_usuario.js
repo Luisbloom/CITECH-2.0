@@ -50,11 +50,6 @@ const editCP = document.querySelector("#edit-cp");
 const editNacimiento = document.querySelector("#edit-nacimiento");
 const btnGuardarEditar = document.querySelector("#btn-guardar-editar");
 
-const passActual = document.querySelector("#pass-actual");
-const passNueva = document.querySelector("#pass-nueva");
-const passConfirm = document.querySelector("#pass-confirm");
-const btnCambiarPass = document.querySelector("#btn-cambiar-pass");
-
 const fotoInput = document.querySelector("#foto-input");
 const fotoActual = document.querySelector("#foto-actual");
 const btnGuardarFoto = document.querySelector("#btn-guardar-foto");
@@ -168,20 +163,6 @@ if (btnGuardarEditar) {
     guardarUsuario();
     cargarInfo();
     alert("Datos actualizados correctamente.");
-  };
-}
-
-/* ---------------------------
-   Change password
-   --------------------------- */
-if (btnCambiarPass) {
-  btnCambiarPass.onclick = () => {
-    if (passActual.value !== currentUser.password) return alert("La contraseña actual no es correcta.");
-    if (passNueva.value !== passConfirm.value) return alert("Las contraseñas no coinciden.");
-    currentUser.password = passNueva.value;
-    guardarUsuario();
-    passActual.value = ""; passNueva.value = ""; passConfirm.value = "";
-    alert("Contraseña actualizada.");
   };
 }
 

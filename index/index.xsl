@@ -178,6 +178,7 @@
         </footer>
 
         <script src="index.js"></script>
+        <script src="../global-nav.js"></script>
 
     </body>
     </html>

@@ -82,7 +82,6 @@
                 <select id="filter-category">
                     <option value="">Todas las categorías</option>
                 </select>
-                <button class="btn-secondary" id="btn-reload-xml">🔄 Recargar desde XML</button>
                 <button class="btn-primary" id="btn-add-product">+ Añadir Producto</button>
             </div>
             <div id="products-table" class="table-container"></div>

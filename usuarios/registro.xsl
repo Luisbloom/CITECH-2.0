@@ -67,10 +67,6 @@
         <label>Fecha de nacimiento</label>
         <input type="date" id="nacimiento" required="required"/>
 
-        <!-- Pregunta de seguridad -->
-        <label>Pregunta de seguridad (opcional)</label>
-        <input type="text" id="seguridad" placeholder="Ej: Nombre de tu primera mascota"/>
-
         <!-- Contraseñas -->
         <label>Contraseña</label>
         <input type="password" id="pass" required="required" minlength="4"/>
@@ -99,6 +95,7 @@
 </div>
 
 <script src="registro.js"></script>
+<script src="../global-nav.js"></script>
 
 </body>
 </html>
